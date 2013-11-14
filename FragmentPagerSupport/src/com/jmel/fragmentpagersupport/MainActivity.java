@@ -62,11 +62,11 @@ public class MainActivity extends FragmentActivity {
         bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
 
         mAdapter = new MyAdapter(getSupportFragmentManager(), this, mPager);
-        mAdapter.addTab(bar.newTab().setText("Simple"),
+        mAdapter.addTab(bar.newTab().setText("Home"),
                 HomePageFragment.class, null);
-        mAdapter.addTab(bar.newTab().setText("List"),
+        mAdapter.addTab(bar.newTab().setText("Vote"),
                 VotingListFragment.class, null);
-        mAdapter.addTab(bar.newTab().setText("Cursor"),
+        mAdapter.addTab(bar.newTab().setText("Songs"),
                 SongListFragment.class, null);
 
         if (savedInstanceState != null) {
@@ -206,15 +206,6 @@ public class MainActivity extends FragmentActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             mNum = getArguments() != null ? getArguments().getInt("num") : 1;
-            if(mNum == 0){
-                 pagename = "Homepage";
-            }
-            else if(mNum == 1){
-                 pagename = "Voting Page";
-            }
-            else if(mNum == 2){
-                 pagename = "Song List";
-            }
             
         }
 
@@ -226,7 +217,7 @@ public class MainActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.fragment_pager_list, container, false);
             View tv = v.findViewById(R.id.text);
-            ((TextView)tv).setText( pagename );
+            ((TextView)tv).setText( "HomePage" );
             return v;
         }
 
@@ -292,15 +283,7 @@ public class MainActivity extends FragmentActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             mNum = getArguments() != null ? getArguments().getInt("num") : 1;
-            if(mNum == 0){
-                 pagename = "Homepage";
-            }
-            else if(mNum == 1){
-                 pagename = "Voting Page";
-            }
-            else if(mNum == 2){
-                 pagename = "Song List";
-            }
+
             
         }
 
@@ -312,7 +295,7 @@ public class MainActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.fragment_pager_list, container, false);
             View tv = v.findViewById(R.id.text);
-            ((TextView)tv).setText( pagename );
+            ((TextView)tv).setText( "Voting Page" );
             return v;
         }
 
@@ -378,15 +361,6 @@ public class MainActivity extends FragmentActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             mNum = getArguments() != null ? getArguments().getInt("num") : 1;
-            if(mNum == 0){
-                 pagename = "Homepage";
-            }
-            else if(mNum == 1){
-                 pagename = "Voting Page";
-            }
-            else if(mNum == 2){
-                 pagename = "Song List";
-            }
             
         }
 
@@ -398,7 +372,7 @@ public class MainActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.fragment_pager_list, container, false);
             View tv = v.findViewById(R.id.text);
-            ((TextView)tv).setText( pagename );
+            ((TextView)tv).setText( "Song List" );
             return v;
         }
 
