@@ -178,7 +178,7 @@ public class MainActivity extends FragmentActivity {
 			// TODO Auto-generated method stub
             // When the tab is selected, switch to the
             // corresponding page in the ViewPager.
-            mPager.setCurrentItem(tab.getPosition());
+           // mPager.setCurrentItem(tab.getPosition());
 	        //mFragment = new SongListFragment();
 	        // Attach tab0fragment.xml layout
 	        //ft.add(android.R.id.content, mFragment);
@@ -188,7 +188,7 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 			// TODO Auto-generated method stub
-	        ft.remove(mFragment);
+	       // ft.remove(mFragment);
 		}
 
 		@Override
@@ -271,17 +271,17 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 			// TODO Auto-generated method stub
-	        mFragment = new SongListFragment();
+	       // mFragment = new SongListFragment();
 	        // Attach tab0fragment.xml layout
-	        ft.add(android.R.id.content, mFragment);
-	        ft.attach(mFragment);
+	      //  ft.add(android.R.id.content, mFragment);
+	       // ft.attach(mFragment);
 			
 		}
 
 		@Override
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 			// TODO Auto-generated method stub
-	        ft.remove(mFragment);
+	      //  ft.remove(mFragment);
 		}
 
 		@Override
@@ -367,15 +367,15 @@ public class MainActivity extends FragmentActivity {
 			// TODO Auto-generated method stub
 	        mFragment = new SongListFragment();
 	        // Attach tab0fragment.xml layout
-	        ft.add(android.R.id.content, mFragment);
-	        ft.attach(mFragment);
+	       // ft.add(android.R.id.content, mFragment);
+	       // ft.attach(mFragment);
 			
 		}
 
 		@Override
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 			// TODO Auto-generated method stub
-			ft.remove(mFragment);
+			//ft.remove(mFragment);
 		}
 		
 		@Override
