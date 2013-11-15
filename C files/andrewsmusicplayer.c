@@ -70,6 +70,7 @@ int songnum;
 while(1){
 printf("Enter a song number: (1 to %d)", songquantity);
 scanf("%d",&songnum);
+while(song_playing == true){}
 playsongnum(songnum);
 }
 printf("done");
