@@ -19,38 +19,35 @@ typedef struct Wave {
 	unsigned char* songData;
 } Wave;
 
+//fUNCTIONS
 void audio_configs_setup(void);
 Wave* isWav(char* filename);
 int file_read(char* charbuffer, char* filename, int charmax);
 void makesound();
 void setactivesound(char* filename);
 void audio_isr(void * context, unsigned int irq_id);
+void playsongnum(int songid);
+void printqueue();
+bool wavecheck(char* filename);
+void opensd();
 
 
+//GLOBAL Variables
 unsigned char *soundbuffer;
 int songsize;
 const int bufferconst = 96;
 alt_up_audio_dev* audio;
 #define WAV_OFFSET 44
 Wave* newwav;
-
 unsigned int * song1;
 unsigned int * song2;
-
 unsigned int* active_sound = NULL;
 int sound_marker = 0;
-
 int playing;
-
-void opensd();
-
-
 char songlist[20][20];
 bool song_playing = false;
-bool wavecheck(char* filename);
 int songquantity;
-void playsongnum(int songid);
-void printqueue();
+
 
 int main(void) {
 
@@ -63,16 +60,17 @@ int main(void) {
 	device_sd = alt_up_sd_card_open_dev("/dev/sd_card");
 	audio_configs_setup();
 	opensd();
-
 	printqueue();
-
+	
+//testing purposes
 int songnum;
 printf("Enter a song number: (1 to %d)", songquantity);
 scanf("%d",&songnum);
 
+
+
 playsongnum(songnum);
 printf("done");
-
 return 0;
 
 }
