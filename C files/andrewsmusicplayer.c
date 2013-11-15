@@ -50,6 +50,7 @@ bool song_playing = false;
 bool wavecheck(char* filename);
 int songquantity;
 void playsongnum(int songid);
+void printqueue();
 
 int main(void) {
 
