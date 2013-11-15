@@ -49,6 +49,7 @@ char songlist[20][20];
 bool song_playing = false;
 bool wavecheck(char* filename);
 int songquantity;
+void playsongnum(int songid);
 
 int main(void) {
 
@@ -62,40 +63,44 @@ int main(void) {
 	audio_configs_setup();
 	opensd();
 
+	printqueue();
 
-//printqueue
+int songnum;
+printf("Enter a song number: (1 to %d)", songquantity);
+scanf("%d",&songnum);
+
+playsongnum(songnum);
+printf("done");
+
+return 0;
+
+}
+void printqueue(){
 int test = 0;
 for(test = 0; test <20; test++){
 	if(songlist[test][0] != '\0' ){
 		printf("%d \t %s \n", (test+1), songlist[test]);
 		songquantity = test+1;}
 }
-//main while loop
-int songnum;
-int printplaying = 0;
+}
+void playsongnum(int songid){
+
+	int printplaying = 0;
 while(1){
-	if(song_playing == false){
-	printf("Enter a song number: (1 to %d)", songquantity);
-	scanf("%d",&songnum);
-		if(songnum <= songquantity){
-			setactivesound(songlist[songnum-1]);
-			alt_up_audio_enable_write_interrupt(audio);
-			printplaying = 0;
+		if(song_playing == false){
+			if(songid <= songquantity){
+				setactivesound(songlist[songid-1]);
+				alt_up_audio_enable_write_interrupt(audio);
+				printplaying = 0;
+			}
+		}
+		else if(song_playing == true && printplaying == 0){
+					printf("playing...\n");
+					printplaying = 1;
+					break;
 		}
 	}
-	else if(song_playing == true && printplaying == 0){
-				printf("playing...\n");
-				printplaying = 1;
-	}
-	//else if(songnum == 0)
-		//alt_up_audio_disable_write_interrupt(audio);
-	}
-
-return 0;
-
 }
-//void(playingfunctionconsole){
-//	}
 
 void setactivesound(char* filename){
 	int j;
