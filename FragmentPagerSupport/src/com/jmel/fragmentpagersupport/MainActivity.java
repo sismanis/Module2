@@ -2,7 +2,7 @@ package com.jmel.fragmentpagersupport;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+//import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -444,7 +444,7 @@ public class MainActivity extends FragmentActivity {
 	// Route called when the user presses "connect"
 
 	public void openSocket(View view) {
-		MyApplication app = (MyApplication) getApplication();
+		//MyApplication app = (MyApplication) getApplication();
 		// TextView msgbox = (TextView) findViewById(R.id.error_message_box);
 
 		// Make sure the socket is not already opened
