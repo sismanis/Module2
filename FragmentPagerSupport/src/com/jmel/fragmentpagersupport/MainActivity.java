@@ -52,7 +52,7 @@ public class MainActivity extends FragmentActivity {
 		mPager.setAdapter(mAdapter);
 
 		// Watch for button clicks.
-		Button button = (Button) findViewById(R.id.goto_first);
+		/*Button button = (Button) findViewById(R.id.goto_first);
 		button.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				mPager.setCurrentItem(0);
@@ -64,7 +64,7 @@ public class MainActivity extends FragmentActivity {
 			public void onClick(View v) {
 				mPager.setCurrentItem(NUM_ITEMS - 1);
 			}
-		});
+		});*/
 
 		final ActionBar bar = getActionBar();
 		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -306,7 +306,7 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View v = inflater.inflate(R.layout.fragment_pager_list, container,
+			View v = inflater.inflate(R.layout.voting_pager_list, container,
 					false);
 			View tv = v.findViewById(R.id.text);
 			((TextView) tv).setText("Voting Page");

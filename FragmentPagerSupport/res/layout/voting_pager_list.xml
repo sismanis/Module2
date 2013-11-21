@@ -12,10 +12,12 @@
 
     <!-- The frame layout is here since we will be showing either
     the empty view or the list view.  -->
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="1" >
+        android:layout_weight="0.5" >
+
         <!-- Here is the list. Since we are using a ListActivity, we
              have to call it "@android:id/list" so ListActivity will
              find it -->
@@ -32,5 +34,21 @@
             android:text="@string/no_items"/>
 
     </FrameLayout>
+    
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="top|center"
+            android:measureWithLargestChild="true"
+            android:orientation="horizontal" >
+
+        <Button android:id="@+id/submit_vote"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="@string/submit_vote">
+        </Button>
+
+    </LinearLayout>
 
 </LinearLayout>
