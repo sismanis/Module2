@@ -322,7 +322,7 @@ public class MainActivity extends FragmentActivity {
 		public void onActivityCreated(Bundle savedInstanceState) {
 			final String[] votinglist = new String[5];
 
-			for (int i = 1; i < 5; i++) {
+			for (int i = 0; i < 5; i++) {
 				votinglist[i] = "votinglist " + Integer.toString(i);
 			}
 			super.onActivityCreated(savedInstanceState);
