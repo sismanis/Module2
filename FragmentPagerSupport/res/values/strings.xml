@@ -14,5 +14,7 @@
     <string name="label_ip">IP:</string>
     <string name="app_label">FragmentPagerSupport</string>
     <string name="search_hint">Search Songs</string>
+    <string name="app_id">712712275408288</string>
+    <string name="share">Share</string>
     
 </resources>

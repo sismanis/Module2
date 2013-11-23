@@ -6,14 +6,21 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.LoginButton;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -36,7 +43,7 @@ import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity {
 	static final int NUM_ITEMS = 3;
-
+	
 	MyAdapter mAdapter;
 
 	ViewPager mPager;
@@ -45,6 +52,7 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_pager);
+		
 
 		// mAdapter = new MyAdapter(getSupportFragmentManager(), this, mPager);
 
@@ -192,12 +200,16 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		}
+		
+		
 	}
 
 	public static class HomePageFragment extends Fragment implements
 			ActionBar.TabListener {
 		int mNum;
 		String pagename;
+		private UiLifecycleHelper uiHelper;
+		private static final String TAG = "HomePageFragment";
 
 		/**
 		 * Create a new instance of CountingFragment, providing "num" as an
@@ -221,6 +233,8 @@ public class MainActivity extends FragmentActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			mNum = getArguments() != null ? getArguments().getInt("num") : 1;
+			uiHelper = new UiLifecycleHelper(getActivity(), callback);
+		    uiHelper.onCreate(savedInstanceState);
 
 		}
 
@@ -235,6 +249,12 @@ public class MainActivity extends FragmentActivity {
 			View v = inflater.inflate(R.layout.activity_main, container, false);
 			// View tv = v.findViewById(R.id.text);
 			// ((TextView)tv).setText( "HomePage" );
+			
+			//FB
+			LoginButton authButton = (LoginButton) v.findViewById(R.id.authButton);
+			authButton.setFragment(this);
+			authButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
+			
 			return v;
 		}
 
@@ -266,6 +286,57 @@ public class MainActivity extends FragmentActivity {
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
 			// TODO Auto-generated method stub
 
+		}
+		
+		//FB Session 
+		private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+		    if (state.isOpened()) {
+		        Log.i(TAG, "Logged in...");
+		    } else if (state.isClosed()) {
+		        Log.i(TAG, "Logged out...");
+		    }
+		}
+		
+		private Session.StatusCallback callback = new Session.StatusCallback() {
+		    @Override
+		    public void call(Session session, SessionState state, Exception exception) {
+		        onSessionStateChange(session, state, exception);
+		    }
+		};
+		
+		@Override
+		public void onResume() {
+		    super.onResume();
+		    Session session = Session.getActiveSession();
+		    if (session != null &&
+		           (session.isOpened() || session.isClosed()) ) {
+		        onSessionStateChange(session, session.getState(), null);
+		    }
+		    uiHelper.onResume();
+		}
+		
+		@Override
+		public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		    super.onActivityResult(requestCode, resultCode, data);
+		    uiHelper.onActivityResult(requestCode, resultCode, data);
+		}
+		
+		@Override
+		public void onPause() {
+		    super.onPause();
+		    uiHelper.onPause();
+		}
+		
+		@Override
+		public void onDestroy() {
+		    super.onDestroy();
+		    uiHelper.onDestroy();
+		}
+		
+		@Override
+		public void onSaveInstanceState(Bundle outState) {
+		    super.onSaveInstanceState(outState);
+		    uiHelper.onSaveInstanceState(outState);
 		}
 	}
 
