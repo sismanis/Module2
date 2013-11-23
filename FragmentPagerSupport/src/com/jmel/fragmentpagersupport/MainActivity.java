@@ -2,10 +2,10 @@ package com.jmel.fragmentpagersupport;
 
 import java.io.IOException;
 import java.io.InputStream;
-//import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,16 +23,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+//import java.io.OutputStream;
 
 public class MainActivity extends FragmentActivity {
 	static final int NUM_ITEMS = 3;
@@ -50,21 +54,6 @@ public class MainActivity extends FragmentActivity {
 
 		mPager = (ViewPager) findViewById(R.id.pager);
 		mPager.setAdapter(mAdapter);
-
-		// Watch for button clicks.
-		/*Button button = (Button) findViewById(R.id.goto_first);
-		button.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				mPager.setCurrentItem(0);
-			}
-		});
-
-		button = (Button) findViewById(R.id.goto_last);
-		button.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				mPager.setCurrentItem(NUM_ITEMS - 1);
-			}
-		});*/
 
 		final ActionBar bar = getActionBar();
 		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -88,8 +77,8 @@ public class MainActivity extends FragmentActivity {
 				.detectDiskReads().detectDiskWrites().detectNetwork()
 				.penaltyLog().build());
 
-//		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_main);
+		// super.onCreate(savedInstanceState);
+		// setContentView(R.layout.activity_main);
 
 		// EditText et = (EditText) findViewById(R.id.RecvdMessage);
 		// et.setKeyListener(null);
@@ -102,6 +91,26 @@ public class MainActivity extends FragmentActivity {
 		TCPReadTimerTask tcp_task = new TCPReadTimerTask();
 		Timer tcp_timer = new Timer();
 		tcp_timer.schedule(tcp_task, 3000, 500);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the options menu from XML
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+
+		/*
+		 * / Get the SearchView and set the searchable configuration
+		 * SearchManager searchManager = (SearchManager)
+		 * getSystemService(Context.SEARCH_SERVICE); SearchView searchView =
+		 * (SearchView) menu.findItem(R.id.action_search).getActionView(); //
+		 * Assumes current activity is the searchable activity
+		 * searchView.setSearchableInfo
+		 * (searchManager.getSearchableInfo(getComponentName()));
+		 * searchView.setIconifiedByDefault(false);
+		 */// Do not iconify the widget; expand it by default
+
+		return true;
 	}
 
 	@Override
@@ -194,7 +203,7 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
-	public static class HomePageFragment extends Fragment implements
+	public static class HomePageFragment extends Fragment implements // ///////////////////////////////////////////////////////////////////////////////////////////
 			ActionBar.TabListener {
 		int mNum;
 		String pagename;
@@ -238,20 +247,6 @@ public class MainActivity extends FragmentActivity {
 			return v;
 		}
 
-		/*
-		 * @Override public void onActivityCreated(Bundle savedInstanceState) {
-		 * final String[] homepage = new String[20];
-		 * 
-		 * for(int i = 0; i < 20; i++){ homepage[i] = "homepage " +
-		 * Integer.toString(i); } super.onActivityCreated(savedInstanceState);
-		 * setListAdapter(new ArrayAdapter<String>(getActivity(),
-		 * android.R.layout.simple_list_item_1, homepage)); }
-		 * 
-		 * @Override public void onListItemClick(ListView l, View v, int
-		 * position, long id) { Log.i("HomePageFragmentList", "Item clicked: " +
-		 * id); }
-		 */
-
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 			// TODO Auto-generated method stub
@@ -273,6 +268,13 @@ public class MainActivity extends FragmentActivity {
 			ActionBar.TabListener {
 		int mNum;
 		String pagename;
+
+		// Watch for button clicks.
+		/*
+		 * Button button = (Button) findViewById(R.id.goto_first);
+		 * button.setOnClickListener(new OnClickListener() { public void
+		 * onClick(View v) { mPager.setCurrentItem(0); } });
+		 */
 
 		/**
 		 * Create a new instance of CountingFragment, providing "num" as an
@@ -313,16 +315,11 @@ public class MainActivity extends FragmentActivity {
 			return v;
 		}
 
-		// private static String[] votinglist = {"American", "Cheddar", "Jack",
-		// "Gamonedo", "Lancashire", "Limburger", "Pepperjack", "Skyr", "Feta",
-		// "Asiago", "American", "Cheddar", "Jack", "Gamonedo", "Lancashire",
-		// "Limburger", "Pepperjack", "Skyr", "Feta", "Asiago"};
-
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 			final String[] votinglist = new String[5];
 
-			for (int i = 1; i < 5; i++) {
+			for (int i = 0; i < 4; i++) {
 				votinglist[i] = "votinglist " + Integer.toString(i);
 			}
 			super.onActivityCreated(savedInstanceState);
@@ -354,9 +351,11 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	public static class SongListFragment extends ListFragment implements
-			ActionBar.TabListener {
+			ActionBar.TabListener, TextWatcher {
 		int mNum;
 		String pagename;
+		MainActivity act = (MainActivity) FragmentManager.findFragmentById(R.id.frameTitle);
+		EditText et = (EditText) findViewById(R.id.songeditText);
 
 		/**
 		 * Create a new instance of CountingFragment, providing "num" as an
@@ -397,14 +396,10 @@ public class MainActivity extends FragmentActivity {
 			return v;
 		}
 
-		// private static String[] Cheeses = {"American", "Cheddar", "Jack",
-		// "Gamonedo", "Lancashire", "Limburger", "Pepperjack", "Skyr", "Feta",
-		// "Asiago", "American", "Cheddar", "Jack", "Gamonedo", "Lancashire",
-		// "Limburger", "Pepperjack", "Skyr", "Feta", "Asiago"};
+		final String[] songs = new String[20];
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
-			final String[] songs = new String[20];
 
 			for (int i = 0; i < 20; i++) {
 				songs[i] = "song " + Integer.toString(i);
@@ -424,6 +419,35 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+			
+			int x = 20;
+//			final String[] songs_sort = new String[x];
+			List<String> songs_sort = new ArrayList<String>();
+			int textlength = et.getText().length();
+			
+//			for (int i = 0; i < x; i++)
+//				songs_sort[i] = "";
+//			
+			songs_sort.clear();
+			
+			for (int i = 0; i < x; i++) {
+				if (textlength <= songs[i].length()) {
+					if (et.getText()
+							.toString()
+							.equalsIgnoreCase(
+									(String) songs[i].subSequence(0,
+											textlength))) {
+						songs_sort.add(songs[i]);
+					}
+				}
+			}
+			setListAdapter(new ArrayAdapter<String>(getActivity(),
+					android.R.layout.simple_list_item_1, songs_sort));
+		}
+
+		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 			// TODO Auto-generated method stub
 
@@ -439,12 +463,25 @@ public class MainActivity extends FragmentActivity {
 			// TODO Auto-generated method stub
 
 		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+			// TODO Auto-generated method stub
+
+		}
 	}
 
 	// Route called when the user presses "connect"
 
 	public void openSocket(View view) {
-		//MyApplication app = (MyApplication) getApplication();
+		// MyApplication app = (MyApplication) getApplication();
 		// TextView msgbox = (TextView) findViewById(R.id.error_message_box);
 
 		// Make sure the socket is not already opened
