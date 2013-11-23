@@ -189,12 +189,10 @@ if ((fileheader[8] == 'W') && fileheader[9] == 'A' && fileheader[10] == 'V'
 			+ (unsigned char) fileheader[26] * 65536;
 	File->samplesize = fileheader[34];
 	File->filename = filename;
+	//if (currentSong)
+		//free(currentSong);
 	currentSong = malloc((File->datasize + WAV_OFFSET + 1)* sizeof(char));
 	assert(currentSong);
-	if (File == NULL) {
-		printf("Couldn't allocate memory to note %s\n", filename);
-		return File;
-	}
 	file_read(currentSong, File->filename, File->datasize + WAV_OFFSET);
 	File->songData = currentSong;
 	return File;
@@ -231,12 +229,12 @@ alt_up_audio_reset_audio_core(audio);
 
 void opensd() {
     alt_up_sd_card_dev* sdcard;
-    char* directory = ".";
-    char* filename;
+    char directory = ".";
+    char filename;
     short next_file = 0;
     int songid = 0;
     short first_file;
-    char* next_filename;
+    char next_filename;
 
     sdcard = alt_up_sd_card_open_dev("/dev/sd_card");
         if (alt_up_sd_card_is_Present()) {
