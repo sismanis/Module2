@@ -354,8 +354,9 @@ public class MainActivity extends FragmentActivity {
 			ActionBar.TabListener, TextWatcher {
 		int mNum;
 		String pagename;
-		MainActivity act = (MainActivity) FragmentManager.findFragmentById(R.id.frameTitle);
-		EditText et = (EditText) findViewById(R.id.songeditText);
+		Fragment fm = (Fragment) getFragmentManager().findFragmentById(R.id.SongListFragment);
+		//FragmentManager.findFragmentById(R.id.songeditText);
+		EditText et = (EditText) fm.findViewById(R.id.songeditText);
 
 		/**
 		 * Create a new instance of CountingFragment, providing "num" as an
@@ -393,6 +394,72 @@ public class MainActivity extends FragmentActivity {
 					false);
 			View tv = v.findViewById(R.id.text);
 			((TextView) tv).setText("Song List");
+
+			//final ListView lv = (ListView) v.findViewById(R.id.ListView01); //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			final ArrayList<String> ar = new ArrayList<String>();
+			et = (EditText) v.findViewById(R.id.songeditText);
+			//final String[] words = list.TERM;
+			// Populate list with our static array of titles.
+			//lv.setAdapter(new ArrayAdapter(getActivity(),
+				//	android.R.layout.simple_list_item_activated_1, songs));
+			setListAdapter(new ArrayAdapter<String>(getActivity(),
+					android.R.layout.simple_list_item_activated_1, songs));
+			setTextFilterEnabled(true);
+
+			et.addTextChangedListener(new TextWatcher() {
+				public void afterTextChanged(Editable s) {
+					// Abstract Method of TextWatcher Interface.
+				}
+
+				public void beforeTextChanged(CharSequence s, int start,
+						int count, int after) {
+					// Abstract Method of TextWatcher Interface.
+				}
+
+				public void onTextChanged(CharSequence s, int start,
+						int before, int count) {
+					int textlength = et.getText().length();
+					List<String> songs_sort = new ArrayList<String>();
+					songs_sort.clear();
+					for (int i = 0; i < songs.length; i++) {
+						if (textlength <= songs[i].length()) {
+							if (et.getText()
+									.toString()
+									.equalsIgnoreCase(
+											(String) songs[i].subSequence(0,
+													textlength))) {
+								songs_sort.add(songs[i]);
+							}
+						}
+					}
+					//lv.setAdapter(new ArrayAdapter(getActivity(),
+						//	android.R.layout.simple_list_item_activated_1,
+							//songs_sort));
+					setListAdapter(new ArrayAdapter<String>(getActivity(),
+							android.R.layout.simple_list_item_1, songs_sort));
+				}
+			});
+
+			// Intent after selection is made
+			lv.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView parent, View view,
+						int position, long id) {
+					String name = lv.getItemAtPosition(position).toString();
+					for (int index = 0; index < songs.length; index++) {
+						if (name.equals(songs[index])) {
+							position = index;
+							break;
+						}
+					}
+					String d1 = songs[position];
+					ar.add(d1.toString());
+
+					showDetails(position);
+
+				}
+			});
+
 			return v;
 		}
 
@@ -421,24 +488,24 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
-			
+
 			int x = 20;
-//			final String[] songs_sort = new String[x];
+			// final String[] songs_sort = new String[x];
 			List<String> songs_sort = new ArrayList<String>();
 			int textlength = et.getText().length();
-			
-//			for (int i = 0; i < x; i++)
-//				songs_sort[i] = "";
-//			
+
+			// for (int i = 0; i < x; i++)
+			// songs_sort[i] = "";
+			//
 			songs_sort.clear();
-			
+
 			for (int i = 0; i < x; i++) {
 				if (textlength <= songs[i].length()) {
 					if (et.getText()
 							.toString()
 							.equalsIgnoreCase(
-									(String) songs[i].subSequence(0,
-											textlength))) {
+									(String) songs[i]
+											.subSequence(0, textlength))) {
 						songs_sort.add(songs[i]);
 					}
 				}
