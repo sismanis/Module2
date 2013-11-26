@@ -46,7 +46,8 @@
         <Button android:id="@+id/submit_vote"
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
-            android:text="@string/submit_vote">
+            android:text="@string/submit_vote"
+            android:onClick="submitVote">
         </Button>
 
     </LinearLayout>

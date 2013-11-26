@@ -30,11 +30,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //import java.io.OutputStream;
 
@@ -44,7 +47,7 @@ public class MainActivity extends FragmentActivity {
 	MyAdapter mAdapter;
 
 	ViewPager mPager;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,13 +80,22 @@ public class MainActivity extends FragmentActivity {
 				.detectDiskReads().detectDiskWrites().detectNetwork()
 				.penaltyLog().build());
 
-		// super.onCreate(savedInstanceState);
-		// setContentView(R.layout.activity_main);
+		// Watch for button clicks.
+		
+		/*Button button = (Button) findViewById(R.id.submit_vote);
+		button.setOnClickListener(new OnClickListener() { */
 
-		// EditText et = (EditText) findViewById(R.id.RecvdMessage);
-		// et.setKeyListener(null);
-		// et = (EditText) findViewById(R.id.error_message_box);
-		// et.setKeyListener(null);
+		  //});
+		  
+		  
+			/*private void sendVote() {
+				VotingListFragment votefragvar = new VotingListFragment();
+				long id = votefragvar.songid;
+				//MainActivity a = (MainActivity) getActivity();
+				MyApplication app = (MyApplication) getApplication();
+				app.sendMessage((int) id);
+				
+			}*/
 
 		// Set up a timer task. We will use the timer to check the
 		// input queue every 500 ms
@@ -98,17 +110,6 @@ public class MainActivity extends FragmentActivity {
 		// Inflate the options menu from XML
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
-
-		/*
-		 * / Get the SearchView and set the searchable configuration
-		 * SearchManager searchManager = (SearchManager)
-		 * getSystemService(Context.SEARCH_SERVICE); SearchView searchView =
-		 * (SearchView) menu.findItem(R.id.action_search).getActionView(); //
-		 * Assumes current activity is the searchable activity
-		 * searchView.setSearchableInfo
-		 * (searchManager.getSearchableInfo(getComponentName()));
-		 * searchView.setIconifiedByDefault(false);
-		 */// Do not iconify the widget; expand it by default
 
 		return true;
 	}
@@ -266,13 +267,9 @@ public class MainActivity extends FragmentActivity {
 			ActionBar.TabListener {
 		int mNum;
 		String pagename;
+		long songid;
 
-		// Watch for button clicks.
-		/*
-		 * Button button = (Button) findViewById(R.id.goto_first);
-		 * button.setOnClickListener(new OnClickListener() { public void
-		 * onClick(View v) { mPager.setCurrentItem(0); } });
-		 */
+		 
 
 		/**
 		 * Create a new instance of CountingFragment, providing "num" as an
@@ -329,10 +326,26 @@ public class MainActivity extends FragmentActivity {
 		public void onListItemClick(ListView l, View v, int position, long id) {
 			Log.i("VotingPageFragmentList", "Item clicked: " + id);
 			
+			this.songid = id;
+			//MainActivity a = (MainActivity) getActivity();
+			//MyApplication app = (MyApplication) a.getApplication();
+			//app.sendMessage((int) id);
+		}
+		
+		public void submitVote(View view){ 
+			VotingListFragment votefragvar = new VotingListFragment();
+			long id = votefragvar.songid;
 			MainActivity a = (MainActivity) getActivity();
 			MyApplication app = (MyApplication) a.getApplication();
-			app.sendMessage((int) id);
-		}
+			app.sendMessage((int) id); 
+		 // Context context = a.getApplicationContext();
+		  //CharSequence text = "+id";
+		 // int duration = Toast.LENGTH_SHORT;
+
+		 // Toast toast = Toast.makeText(context, text, duration);
+		  //toast.show();
+
+	  }
 
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -358,7 +371,7 @@ public class MainActivity extends FragmentActivity {
 		String pagename;
 		//Fragment fm = (Fragment) getFragmentManager().findFragmentById(R.id.SongListFragment);
 		//FragmentManager.findFragmentById(R.id.songeditText);
-		//EditText et = (EditText) getListView().findViewById(R.id.songeditText);
+		EditText et;// = (EditText) getListView().findViewById(R.id.songeditText);
 
 		/**
 		 * Create a new instance of CountingFragment, providing "num" as an
@@ -397,7 +410,7 @@ public class MainActivity extends FragmentActivity {
 			View tv = v.findViewById(R.id.text);
 			((TextView) tv).setText("Song List");
 
-			/*final ListView lv = (ListView) v.findViewById(R.id.1); //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			//final ListView lv = (ListView) v.findViewById(R.id.1); //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			final ArrayList<String> ar = new ArrayList<String>();
 			et = (EditText) v.findViewById(R.id.songeditText);
 			//final String[] words = list.TERM;
@@ -406,7 +419,10 @@ public class MainActivity extends FragmentActivity {
 				//	android.R.layout.simple_list_item_activated_1, songs));
 			setListAdapter(new ArrayAdapter<String>(getActivity(),
 					android.R.layout.simple_list_item_activated_1, songs));
-			setTextFilterEnabled(true);
+			//setTextFilterEnabled(true);
+			
+			et = (EditText) v.findViewById(R.id.songeditText);
+
 
 			et.addTextChangedListener(new TextWatcher() {
 				public void afterTextChanged(Editable s) {
@@ -425,42 +441,24 @@ public class MainActivity extends FragmentActivity {
 					songs_sort.clear();
 					for (int i = 0; i < songs.length; i++) {
 						if (textlength <= songs[i].length()) {
-							if (et.getText()
+							if (songs[i].toLowerCase().contains(
+									et.getText().toString().toLowerCase())) {
+								songs_sort.add(songs[i]);
+							}
+							/*if (et.getText()
 									.toString()
 									.equalsIgnoreCase(
 											(String) songs[i].subSequence(0,
 													textlength))) {
 								songs_sort.add(songs[i]);
-							}
+							}*/
 						}
 					}
-					//lv.setAdapter(new ArrayAdapter(getActivity(),
-						//	android.R.layout.simple_list_item_activated_1,
-							//songs_sort));
+
 					setListAdapter(new ArrayAdapter<String>(getActivity(),
 							android.R.layout.simple_list_item_1, songs_sort));
 				}
 			});
-
-			// Intent after selection is made
-			lv.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView parent, View view,
-						int position, long id) {
-					String name = lv.getItemAtPosition(position).toString();
-					for (int index = 0; index < songs.length; index++) {
-						if (name.equals(songs[index])) {
-							position = index;
-							break;
-						}
-					}
-					String d1 = songs[position];
-					ar.add(d1.toString());
-
-					showDetails(position);
-
-				}
-			});*/
 
 			return v;
 		}
@@ -487,34 +485,6 @@ public class MainActivity extends FragmentActivity {
 			app.sendMessage((int) id);
 		}
 
-		/*@Override
-		public void onTextChanged(CharSequence s, int start, int before,
-				int count) {
-
-			int x = 20;
-			// final String[] songs_sort = new String[x];
-			List<String> songs_sort = new ArrayList<String>();
-			int textlength = et.getText().length();
-
-			// for (int i = 0; i < x; i++)
-			// songs_sort[i] = "";
-			//
-			songs_sort.clear();
-
-			for (int i = 0; i < x; i++) {
-				if (textlength <= songs[i].length()) {
-					if (et.getText()
-							.toString()
-							.equalsIgnoreCase(
-									(String) songs[i]
-											.subSequence(0, textlength))) {
-						songs_sort.add(songs[i]);
-					}
-				}
-			}
-			setListAdapter(new ArrayAdapter<String>(getActivity(),
-					android.R.layout.simple_list_item_1, songs_sort));
-		}*/
 
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -533,18 +503,6 @@ public class MainActivity extends FragmentActivity {
 
 		}
 
-		/*@Override
-		public void afterTextChanged(Editable s) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
-			// TODO Auto-generated method stub
-
-		}*/
 	}
 
 	// Route called when the user presses "connect"
