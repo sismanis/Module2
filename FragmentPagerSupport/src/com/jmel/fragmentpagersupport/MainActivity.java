@@ -121,9 +121,7 @@ public class MainActivity extends FragmentActivity {
 
 	public static class MyAdapter extends FragmentPagerAdapter implements
 			ActionBar.TabListener, ViewPager.OnPageChangeListener {
-		// public MyAdapter(FragmentManager fm) {
-		// super(fm);
-		// }
+
 
 		private final Context mContext;
 		private final ActionBar mActionBar;
@@ -330,6 +328,10 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public void onListItemClick(ListView l, View v, int position, long id) {
 			Log.i("VotingPageFragmentList", "Item clicked: " + id);
+			
+			MainActivity a = (MainActivity) getActivity();
+			MyApplication app = (MyApplication) a.getApplication();
+			app.sendMessage((int) id);
 		}
 
 		@Override
@@ -351,12 +353,12 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	public static class SongListFragment extends ListFragment implements
-			ActionBar.TabListener, TextWatcher {
+			ActionBar.TabListener{//, TextWatcher {
 		int mNum;
 		String pagename;
-		Fragment fm = (Fragment) getFragmentManager().findFragmentById(R.id.SongListFragment);
+		//Fragment fm = (Fragment) getFragmentManager().findFragmentById(R.id.SongListFragment);
 		//FragmentManager.findFragmentById(R.id.songeditText);
-		EditText et = (EditText) fm.findViewById(R.id.songeditText);
+		//EditText et = (EditText) getListView().findViewById(R.id.songeditText);
 
 		/**
 		 * Create a new instance of CountingFragment, providing "num" as an
@@ -395,7 +397,7 @@ public class MainActivity extends FragmentActivity {
 			View tv = v.findViewById(R.id.text);
 			((TextView) tv).setText("Song List");
 
-			//final ListView lv = (ListView) v.findViewById(R.id.ListView01); //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			/*final ListView lv = (ListView) v.findViewById(R.id.1); //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			final ArrayList<String> ar = new ArrayList<String>();
 			et = (EditText) v.findViewById(R.id.songeditText);
 			//final String[] words = list.TERM;
@@ -458,7 +460,7 @@ public class MainActivity extends FragmentActivity {
 					showDetails(position);
 
 				}
-			});
+			});*/
 
 			return v;
 		}
@@ -485,7 +487,7 @@ public class MainActivity extends FragmentActivity {
 			app.sendMessage((int) id);
 		}
 
-		@Override
+		/*@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
 
@@ -512,7 +514,7 @@ public class MainActivity extends FragmentActivity {
 			}
 			setListAdapter(new ArrayAdapter<String>(getActivity(),
 					android.R.layout.simple_list_item_1, songs_sort));
-		}
+		}*/
 
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -531,7 +533,7 @@ public class MainActivity extends FragmentActivity {
 
 		}
 
-		@Override
+		/*@Override
 		public void afterTextChanged(Editable s) {
 			// TODO Auto-generated method stub
 
@@ -542,7 +544,7 @@ public class MainActivity extends FragmentActivity {
 				int after) {
 			// TODO Auto-generated method stub
 
-		}
+		}*/
 	}
 
 	// Route called when the user presses "connect"
