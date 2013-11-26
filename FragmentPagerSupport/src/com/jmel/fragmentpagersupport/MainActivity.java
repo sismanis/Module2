@@ -14,6 +14,7 @@ import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -483,6 +484,9 @@ public class MainActivity extends FragmentActivity {
 			MainActivity a = (MainActivity) getActivity();
 			MyApplication app = (MyApplication) a.getApplication();
 			app.sendMessage((int) id);
+			Intent i = new Intent(app, PlayingSong.class);
+			i.putExtra("songname", songs[(int)id]);
+			startActivity(i);
 		}
 
 
