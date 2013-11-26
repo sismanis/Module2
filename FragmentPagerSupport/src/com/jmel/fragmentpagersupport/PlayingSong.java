@@ -32,12 +32,12 @@ public class PlayingSong extends Activity {
 		if(!isPlay){
 			v.setBackgroundResource(R.drawable.play);
 			isPlay = true;
-			app.sendMessage(101);
+			app.sendMessage(255);
 		}
 		else{
 			v.setBackgroundResource(R.drawable.pause);
 			isPlay= false;
-			app.sendMessage(100);
+			app.sendMessage(254);
 		}
 			
 	}
