@@ -88,16 +88,37 @@ void main_player_function(int inputnum){
 		 interruptsong = true;
 	 }
 	 else if(inputnum == -5){
-		 if(previous_song > 0){
+		 printf("current choice: %d \t previous song: %d \t songquantity: %d \n", inputnum, previous_song, songquantity);
+
+		 if(previous_song > -1){
 		 interruptsong = true;
 		 play(songlist[previous_song]);
 		 interruptsong = false;
 		 }
 	 }
-	 else if(inputnum <= songquantity){
-		 	play(songlist[inputnum-1]);
+	 else if (inputnum == -6){
+
+		 printf("current choice: %d \t previous song: %d \t songquantity: %d \n", inputnum, previous_song, songquantity);
+
+		 if(previous_song > -1){
+			 previous_song = previous_song+1;
+			if((previous_song) > songquantity)
+				previous_song = 0;
+			interruptsong = true;
+		 	play(songlist[(previous_song)]);
 		 	interruptsong = false;
-		 	previous_song = inputnum-1;
+
+		 }
+
+		 printf("AFTER: current choice: %d \t previous song: %d \t songquantity: %d \n", inputnum, previous_song, songquantity);
+
+	 }
+	 else if(inputnum <= songquantity){
+		 printf("current choice: %d \t previous song: %d \t songquantity: %d \n", inputnum, previous_song, songquantity);
+
+		 	play(songlist[inputnum]);
+		 	interruptsong = false;
+		 	previous_song = inputnum;
 	 }
 }
 
@@ -105,8 +126,8 @@ void printqueue() {
 	int test = 0;
 	for (test = 0; test < 50; test++) {
 		if (songlist[test][0] != '\0') {
-			printf("%d \t %s \n", (test + 1), songlist[test]);
-			songquantity = test + 1;
+			printf("%d \t %s \n", test, songlist[test]);
+			//songquantity = test + 1;
 		}
 	}
 }
@@ -247,6 +268,8 @@ void opensd() {
 	short first_file;
 	char next_filename;
 
+	songquantity = 0;
+
 	sdcard = alt_up_sd_card_open_dev("/dev/sd_card");
 	if (alt_up_sd_card_is_Present()) {
 		if (alt_up_sd_card_is_FAT16()) {
@@ -259,12 +282,13 @@ void opensd() {
 						strcpy(songlist[songid], next_filename);
 						//printf("%s \t %d \n", songlist[songid], songid);
 						songid++;
+						songquantity++;
 					}
 				}
 			}
 		}
 	}
-
+	songquantity = songquantity -1;
 }
 void audio_configs_setup(void) {
 	alt_up_av_config_dev * av_config = alt_up_av_config_open_dev(
