@@ -94,8 +94,7 @@ void main_player_function(int inputnum){
 		 interruptsong = false;
 		 }
 	 }
-	 else{
-
+	 else if(inputnum <= songquantity){
 		 	play(songlist[inputnum-1]);
 		 	interruptsong = false;
 		 	previous_song = inputnum-1;
