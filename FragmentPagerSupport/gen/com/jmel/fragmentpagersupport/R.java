@@ -21,32 +21,44 @@ public final class R {
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int ic_action_search=0x7f020000;
-        public static final int ic_action_searchdark=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
+        public static final int backward=0x7f020000;
+        public static final int forward=0x7f020001;
+        public static final int ic_action_search=0x7f020002;
+        public static final int ic_action_searchdark=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
+        public static final int pause=0x7f020005;
+        public static final int play=0x7f020006;
     }
     public static final class id {
-        public static final int action_search=0x7f09000a;
-        public static final int action_settings=0x7f09000b;
+        public static final int action_search=0x7f090010;
+        public static final int action_settings=0x7f090011;
+        public static final int backwardbutton=0x7f090009;
+        public static final int forwardbutton=0x7f09000a;
         public static final int ip1=0x7f090000;
         public static final int ip2=0x7f090001;
         public static final int ip3=0x7f090002;
         public static final int ip4=0x7f090003;
-        public static final int pager=0x7f090005;
+        public static final int linearLayout1=0x7f090006;
+        public static final int linearLayout2=0x7f090005;
+        public static final int pager=0x7f09000b;
+        public static final int playbutton=0x7f090008;
         public static final int port=0x7f090004;
-        public static final int progress_bar=0x7f090006;
-        public static final int songeditText=0x7f090008;
-        public static final int submit_vote=0x7f090009;
-        public static final int text=0x7f090007;
+        public static final int progress_bar=0x7f09000c;
+        public static final int songeditText=0x7f09000e;
+        public static final int submit_vote=0x7f09000f;
+        public static final int text=0x7f09000d;
+        public static final int textView1=0x7f090007;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int fragment_pager=0x7f030001;
-        public static final int fragment_pager_list=0x7f030002;
-        public static final int voting_pager_list=0x7f030003;
+        public static final int activity_playing_song=0x7f030001;
+        public static final int fragment_pager=0x7f030002;
+        public static final int fragment_pager_list=0x7f030003;
+        public static final int voting_pager_list=0x7f030004;
     }
     public static final class menu {
         public static final int main=0x7f080000;
+        public static final int playing_song=0x7f080001;
     }
     public static final class string {
         public static final int action_bar_tabs_pager=0x7f060008;
@@ -63,6 +75,7 @@ public final class R {
         public static final int no_items=0x7f060006;
         public static final int search_hint=0x7f06000c;
         public static final int submit_vote=0x7f060004;
+        public static final int title_activity_playing_song=0x7f06000e;
     }
     public static final class style {
         /** 

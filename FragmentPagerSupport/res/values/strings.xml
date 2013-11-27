@@ -15,5 +15,6 @@
     <string name="app_label">FragmentPagerSupport</string>
     <string name="search_hint">Search Songs</string>
     <string name="action_search">Search</string>
-    
+    <string name="title_activity_playing_song">PlayingSong</string>
+
 </resources>

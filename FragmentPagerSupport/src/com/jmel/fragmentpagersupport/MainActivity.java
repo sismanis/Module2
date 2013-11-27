@@ -14,6 +14,7 @@ import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -408,7 +409,7 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 			long id = votefragvar.songid;
 			MainActivity a = (MainActivity) getActivity();
 			MyApplication app = (MyApplication) a.getApplication();
-			app.sendMessage((int) id);
+			//app.sendMessage((int) id);
 			// Context context = a.getApplicationContext();
 			// CharSequence text = "+id";
 			// int duration = Toast.LENGTH_SHORT;
@@ -548,7 +549,12 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 
 			MainActivity a = (MainActivity) getActivity();
 			MyApplication app = (MyApplication) a.getApplication();
+
 			//app.sendMessage((int) id);
+			Intent i = new Intent(app, PlayingSong.class);
+			i.putExtra("songname", songs[(int)id]);
+			startActivity(i);
+
 		}
 
 		@Override
