@@ -82,6 +82,7 @@
         android:onClick="closeSocket"
         android:text="Disconnect" />
 
+
     <com.facebook.widget.LoginButton
         android:id="@+id/authButton"
         android:layout_width="fill_parent"
@@ -99,4 +100,14 @@
         android:textStyle="bold"
         android:visibility="invisible" />
 
-</LinearLayout>
+
+
+        
+         <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="loadSongs"
+        android:text="Load Songs" />
+    
+ </LinearLayout>
+
