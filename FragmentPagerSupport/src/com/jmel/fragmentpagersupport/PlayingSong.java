@@ -3,6 +3,7 @@ package com.jmel.fragmentpagersupport;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 public class PlayingSong extends Activity {
  public String[] songlist = new String[100];
  public int currentsong;
+ 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -19,7 +21,7 @@ public class PlayingSong extends Activity {
 		String song = intent.getExtras().getString("songname");
 		TextView text = (TextView) findViewById(R.id.textView1);
 		text.setText(song);
-		songlist = intent.getExtras().getStringArray("songlist");
+		songlist = intent.getExtras().getStringArray("songslist");
 		currentsong = intent.getExtras().getInt("cursong");
 	}
 
@@ -31,7 +33,7 @@ public class PlayingSong extends Activity {
 		String song = intent.getExtras().getString("songname");
 		TextView text = (TextView) findViewById(R.id.textView1);
 		text.setText(song);
-		songlist = intent.getExtras().getStringArray("songlist");
+		songlist = intent.getExtras().getStringArray("songslist");
 		currentsong = intent.getExtras().getInt("cursong");
 	}
 	
@@ -75,7 +77,9 @@ public void forwardClick(View v){
 	app.sendMessage(253);
 	
 	currentsong = currentsong + 1;
+	Log.i("fuck", songlist[currentsong]);
 	TextView text = (TextView) findViewById(R.id.textView1);
+
 	text.setText((String) songlist[currentsong]);
 	
 		
