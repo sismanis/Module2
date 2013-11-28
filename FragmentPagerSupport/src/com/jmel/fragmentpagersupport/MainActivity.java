@@ -550,10 +550,13 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 			MainActivity a = (MainActivity) getActivity();
 			MyApplication app = (MyApplication) a.getApplication();
 
-			//app.sendMessage((int) id);
+			app.sendMessage((int) id);
 			Intent i = new Intent(app, PlayingSong.class);
 			i.putExtra("songname", songs[(int)id]);
+			i.putExtra("songslist", songs);
+			i.putExtra("cursong", (int) id);
 			startActivity(i);
+		
 
 		}
 
