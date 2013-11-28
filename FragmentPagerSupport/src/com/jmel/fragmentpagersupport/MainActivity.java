@@ -43,6 +43,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 	static final int NUM_ITEMS = 3;
 
 	MyAdapter mAdapter;
+	static String[] songs;
 
 	ViewPager mPager;
 
@@ -246,6 +247,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 					mViewPager.setCurrentItem(i);
 				}
 			}
+			
 		}
 
 		@Override
@@ -516,15 +518,15 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			return v;
 		}
 
+
 		public List<String> songs_sort = new ArrayList<String>();
 		public final String[] songs = new String[100];
+
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 
-			for (int i = 0; i < 100; i++) {
-				songs[i] = "song " + Integer.toString(i);
-			}
+			
 			super.onActivityCreated(savedInstanceState);
 			setListAdapter(new ArrayAdapter<String>(getActivity(),
 					android.R.layout.simple_list_item_1, songs));
@@ -544,6 +546,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			else
 				s = "full";
 			Log.i("songs", s);
+
 
 			// app.sendMessage((int) id);
 			if (!songs_sort.isEmpty()) {
@@ -589,9 +592,14 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 					//}
 				}
 			}
+
+			//app.sendMessage((int) id);
 			Intent i = new Intent(app, PlayingSong.class);
-			i.putExtra("songname", songs[(int) id]);
+			i.putExtra("songname", songs[(int)id]);
+			i.putExtra("songslist", songs);
+			i.putExtra("cursong", (int) id);
 			startActivity(i);
+		
 
 		}
 
@@ -614,6 +622,60 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 
 	}
 
+	public void loadSongs(View view){
+		int i;
+		String[] songstemp = new String[100];
+		 final byte shake[] = {0xF};
+		 byte buf[] = new byte[20];
+		 int bufcount=0;
+		 boolean done = false;
+		//public boolean transmitting = false;
+		int songnumber = 0;
+	//	MainActivity a = (MainActivity) getActivity();
+		MyApplication app = (MyApplication) getApplication();
+		if (app.sock != null && app.sock.isConnected() && !app.sock.isClosed() ) {
+			//transmitting = true;
+			InputStream in;
+			try {
+				in = app.sock.getInputStream();
+			
+			
+					// See if any bytes are available from the Middleman
+					
+					
+						in.read(buf);
+						while(buf[bufcount]!= 0x0){
+						// If so, read them in and create a sring
+						//bufcount = 0;
+						while(buf[bufcount]!=0x1){
+						in.read(buf);
+						bufcount++;
+						}
+						songstemp[songnumber]  = new String(buf, 0, bufcount-1, "US-ASCII");
+						Log.i("song", songstemp[songnumber]);
+						songnumber++;
+						buf = new byte[20];
+						in.read(buf);
+						bufcount = 0;
+					}
+
+					
+						songs = new String[songnumber];
+					for( i = 0; i<songnumber; i++){
+						songs[i] = songstemp[i];
+					}
+					} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		}
+		//Fragment fm = new SongListFragment();
+	//	fm.onCreateView();
+		
+	//	fm.setListAdapter(new ArrayAdapter<String>(a.getActivity(),
+		//			android.R.layout.simple_list_item_1, songs));
+	}
 	// Route called when the user presses "connect"
 
 	public void openSocket(View view) {
@@ -633,6 +695,8 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		// and executes the code in it.
 
 		new SocketConnect().execute((Void) null);
+		
+		
 	}
 
 	// Called when the user closes a socket
@@ -721,18 +785,18 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			if (app.sock != null && app.sock.isConnected()
 					&& !app.sock.isClosed()) {
 
-				try {
-					InputStream in = app.sock.getInputStream();
+				//try {
+				//	InputStream in = app.sock.getInputStream();
 
 					// See if any bytes are available from the Middleman
 
-					int bytes_avail = in.available();
-					if (bytes_avail > 0) {
+					//int bytes_avail = in.available();
+				//	if (bytes_avail > 0) {
 
 						// If so, read them in and create a sring
 
-						byte buf[] = new byte[bytes_avail];
-						in.read(buf);
+						//byte buf[] = new byte[bytes_avail];
+						//in.read(buf);
 
 						// final String s = new String(buf, 0, bytes_avail,
 						// "US-ASCII");
@@ -749,10 +813,10 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 						// }
 						// });
 
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				//	}
+			//	} catch (IOException e) {
+				//	e.printStackTrace();
+				//}
 			}
 		}
 	}

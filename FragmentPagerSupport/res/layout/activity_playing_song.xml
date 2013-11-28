@@ -31,9 +31,18 @@
             android:id="@+id/playbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="playClick"
-            android:background="@drawable/play" />
+            android:background="@drawable/pause"
+            android:onClick="playClick" />
 
+        <ImageButton
+            android:id="@+id/stopbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/linearLayout1"
+            android:layout_marginLeft="18dp"
+            android:layout_toRightOf="@+id/playbutton"
+            android:background="@drawable/stopbutton"
+            android:onClick="stopClick" />
     </LinearLayout>
 
     <TextView
@@ -45,7 +54,8 @@
         android:editable="true"
         android:gravity="center"
         android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+         />
 
     <ImageButton
         android:id="@+id/backwardbutton"
@@ -54,7 +64,8 @@
         android:layout_alignBottom="@+id/linearLayout1"
         android:layout_marginRight="18dp"
         android:layout_toLeftOf="@+id/linearLayout1"
-        android:background="@drawable/backward" />
+        android:background="@drawable/backward" 
+        android:onClick="backClick"/>
 
     <ImageButton
         android:id="@+id/forwardbutton"
@@ -63,6 +74,7 @@
         android:layout_alignBottom="@+id/linearLayout1"
         android:layout_marginLeft="18dp"
         android:layout_toRightOf="@+id/linearLayout1"
-        android:background="@drawable/forward" />
+        android:background="@drawable/forward"
+        android:onClick="forwardClick" />
 
 </RelativeLayout>
