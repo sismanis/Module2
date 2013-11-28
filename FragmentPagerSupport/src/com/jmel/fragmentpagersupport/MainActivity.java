@@ -405,10 +405,10 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 		}
 
 		public void submitVote(View view) {
-			VotingListFragment votefragvar = new VotingListFragment();
-			long id = votefragvar.songid;
-			MainActivity a = (MainActivity) getActivity();
-			MyApplication app = (MyApplication) a.getApplication();
+			//VotingListFragment votefragvar = new VotingListFragment();
+			//long id = votefragvar.songid;
+			//MainActivity a = (MainActivity) getActivity();
+			//MyApplication app = (MyApplication) a.getApplication();
 			//app.sendMessage((int) id);
 			// Context context = a.getApplicationContext();
 			// CharSequence text = "+id";

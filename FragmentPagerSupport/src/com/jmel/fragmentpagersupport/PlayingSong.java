@@ -12,6 +12,7 @@ public class PlayingSong extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	    getActionBar().setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_playing_song);
 		Intent intent = getIntent();
 		String song = intent.getExtras().getString("songname");

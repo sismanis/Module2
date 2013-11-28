@@ -34,8 +34,15 @@
         </activity>
         <activity
             android:name="com.jmel.fragmentpagersupport.PlayingSong"
-            android:label="@string/title_activity_playing_song" >
+            android:label="@string/title_activity_playing_song" 
+            android:parentActivityName="com.jmel.fragmentpagersupport.MainActivity" >
+        <!-- Parent activity meta-data to support 4.0 and lower -->
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.jmel.fragmentpagersupport.MainActivity" />
         </activity>
+            <!-- A child of the main activity -->
+
     </application>
 
 </manifest>
