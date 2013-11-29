@@ -16,8 +16,12 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -36,6 +40,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 //import java.io.OutputStream;
@@ -433,9 +438,9 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			// app.sendMessage((int) id);
 		}
 
-<<<<<<< HEAD
-		
-=======
+//<<<<<<< HEAD
+//		
+//=======
 		public void submitVote(View view) {
 			// VotingListFragment votefragvar = new VotingListFragment();
 			// long id = votefragvar.songid;
@@ -450,7 +455,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			// toast.show();
 
 		}
->>>>>>> eefcbd06aeb148a4179a4d859e855293ead735b8
+//>>>>>>> eefcbd06aeb148a4179a4d859e855293ead735b8
 
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -668,9 +673,54 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		}
 
 	}
+	private static final int PROGRESS = 0x1;
+
+    private ProgressBar mProgress;
+    private int mProgressStatus = 0;
+
+    private Handler mHandler = new Handler();
+    
+    protected void startprogressbar(){//Bundle icicle) {
+        //super.onCreate(icicle);
+    	mProgressStatus = 0;
+        //setContentView(R.layout.progressbar_activity);
+
+        mProgress = (ProgressBar) findViewById(R.id.adprogress_progressBar);
+
+        // Start lengthy operation in a background thread
+        new Thread(new Runnable() {
+            public void run() {
+               while (mProgressStatus < 100) {
+                   //waitsec();
+            	   if(mProgressStatus == 90){
+            		   try {
+            		        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            		        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            		        r.play();
+            		    } catch (Exception e) {}
+            	   }
+            	   try {
+            		    Thread.sleep(1000);
+            		} catch (InterruptedException e) {
+            		    e.printStackTrace();
+            		}
+            	   mProgressStatus =  mProgressStatus + 5;
+
+                    // Update the progress bar
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            mProgress.setProgress(mProgressStatus);
+                        }
+                    });
+               }
+            }
+        }).start();
+    }
 
 	public void loadSongs(View view){
 		Log.i("running:", "running");
+		
+		
 		int i;
 		String[] songstemp = new String[100];
 		 final byte shake[] = {0xF};
@@ -683,6 +733,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		int songnumber = 0;
 	//	MainActivity a = (MainActivity) getActivity();
 		MyApplication app = (MyApplication) getApplication();
+		//app.sendMessage(101);
 		if (app.sock != null && app.sock.isConnected() && !app.sock.isClosed() ) {
 			//transmitting = true;
 			Log.i("socket","socket");
@@ -765,6 +816,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		// and executes the code in it.
 
 		new SocketConnect().execute((Void) null);
+		startprogressbar();
 		
 		
 	}
