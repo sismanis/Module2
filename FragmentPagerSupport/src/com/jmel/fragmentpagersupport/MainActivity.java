@@ -17,14 +17,14 @@ import org.json.JSONObject;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
-//import android.app.DownloadManager.Request;
+import android.app.DownloadManager.Request;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-//import android.service.textservice.SpellCheckerService.Session;
+import android.service.textservice.SpellCheckerService.Session;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -48,10 +48,8 @@ import android.widget.Toast;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
-import com.facebook.Request;
 import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
-import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
@@ -375,7 +373,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		}
 
 		// FB Session
-		private void onSessionStateChange(Session session, SessionState state,
+		private void onSessionStateChange(com.facebook.Session session, com.facebook.SessionState state,
 				Exception exception) {
 			if (state.isOpened()) {
 				Log.i(TAG, "Logged in...");
@@ -394,9 +392,9 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		    }
 		}
 
-		private Session.StatusCallback callback = new Session.StatusCallback() {
+		private com.facebook.Session.StatusCallback callback = new com.facebook.Session.StatusCallback() {
 			@Override
-			public void call(Session session, SessionState state,
+			public void call(com.facebook.Session session, com.facebook.SessionState state,
 					Exception exception) {
 				onSessionStateChange(session, state, exception);
 			}
@@ -405,7 +403,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		@Override
 		public void onResume() {
 			super.onResume();
-			Session session = Session.getActiveSession();
+			com.facebook.Session session = com.facebook.Session.getActiveSession();
 			if (session != null && (session.isOpened() || session.isClosed())) {
 				onSessionStateChange(session, session.getState(), null);
 			}
@@ -439,7 +437,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		}
 		
 		private void publishStory() {
-		    Session session = Session.getActiveSession();
+			com.facebook.Session session = com.facebook.Session.getActiveSession();
 
 		    if (session != null){
 
@@ -447,7 +445,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		        List<String> permissions = session.getPermissions();
 		        if (!isSubsetOf(PERMISSIONS, permissions)) {
 		            pendingPublishReauthorization = true;
-		            Session.NewPermissionsRequest newPermissionsRequest = new Session
+		            com.facebook.Session.NewPermissionsRequest newPermissionsRequest = new com.facebook.Session
 		                    .NewPermissionsRequest(this, PERMISSIONS);
 		        session.requestNewPublishPermissions(newPermissionsRequest);
 		            return;
@@ -460,7 +458,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		        postParams.putString("link", "https://developers.facebook.com/android");
 		        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
 
-		        Request.Callback callback= new Request.Callback() {
+		        com.facebook.Request.Callback callback= new com.facebook.Request.Callback() {
 		            public void onCompleted(Response response) {
 		                JSONObject graphResponse = response
 		                                           .getGraphObject()
@@ -487,7 +485,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		            }
 		        };
 
-		        Request request = new Request(session, "me/feed", postParams, 
+		        com.facebook.Request request = new com.facebook.Request(session, "me/feed", postParams, 
 		                              HttpMethod.POST, callback);
 
 		        RequestAsyncTask task = new RequestAsyncTask(request);
