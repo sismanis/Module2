@@ -40,7 +40,7 @@ import android.widget.TextView;
 
 //import java.io.OutputStream;
 
-public class MainActivity extends FragmentActivity{// implements ProgressBar{
+public class MainActivity extends FragmentActivity {// implements ProgressBar{
 	static final int NUM_ITEMS = 3;
 
 	MyAdapter mAdapter;
@@ -88,11 +88,13 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 		TCPReadTimerTask tcp_task = new TCPReadTimerTask();
 		Timer tcp_timer = new Timer();
 		tcp_timer.schedule(tcp_task, 3000, 500);
-		
-        /*TextProgressBar textProgressBar = (TextProgressBar) findViewById(R.id.progress_bar);
-        textProgressBar.setText("Loading 70%");
-        textProgressBar.setProgress(70);
-        textProgressBar.setTextSize(18);*/
+
+		/*
+		 * TextProgressBar textProgressBar = (TextProgressBar)
+		 * findViewById(R.id.progress_bar);
+		 * textProgressBar.setText("Loading 70%");
+		 * textProgressBar.setProgress(70); textProgressBar.setTextSize(18);
+		 */
 
 		// progress_bar = new ProgressBar(this);
 		// mProgress = (ProgressBar) findViewById(R.id.progress_bar);
@@ -189,50 +191,33 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 
 	}
 
-	/*public class TextProgressBar extends ProgressBar {
-
-		private String text = "";
-		private int textColor = Color.BLACK;
-		private float textSize = 15;
-
-		public TextProgressBar(Context context) {
-			super(context);
-		}
-
-		@Override
-		protected synchronized void onDraw(Canvas canvas) {
-			super.onDraw(canvas);
-			// create an instance of class Paint, set color and font size
-			Paint textPaint = new Paint();
-			textPaint.setAntiAlias(true);
-			textPaint.setColor(textColor);
-			textPaint.setTextSize(textSize);
-			// In order to show text in a middle, we need to know its size
-			Rect bounds = new Rect();
-			textPaint.getTextBounds(text, 0, text.length(), bounds);
-			// Now we store font size in bounds variable and can calculate it's
-			// position
-			int x = getWidth() / 2 - bounds.centerX();
-			int y = getHeight() / 2 - bounds.centerY();
-			// drawing text with appropriate color and size in the center
-			canvas.drawText(text, x, y, textPaint);
-		}
-
-		public synchronized void setText(String text) {
-			if (text != null) {
-				this.text = text;
-			} else {
-				this.text = "";
-			}
-			postInvalidate();
-		}
-		
-	    public synchronized void setTextSize(float textSize) {
-	        this.textSize = textSize;
-	        postInvalidate();
-	    }
-
-	}*/
+	/*
+	 * public class TextProgressBar extends ProgressBar {
+	 * 
+	 * private String text = ""; private int textColor = Color.BLACK; private
+	 * float textSize = 15;
+	 * 
+	 * public TextProgressBar(Context context) { super(context); }
+	 * 
+	 * @Override protected synchronized void onDraw(Canvas canvas) {
+	 * super.onDraw(canvas); // create an instance of class Paint, set color and
+	 * font size Paint textPaint = new Paint(); textPaint.setAntiAlias(true);
+	 * textPaint.setColor(textColor); textPaint.setTextSize(textSize); // In
+	 * order to show text in a middle, we need to know its size Rect bounds =
+	 * new Rect(); textPaint.getTextBounds(text, 0, text.length(), bounds); //
+	 * Now we store font size in bounds variable and can calculate it's //
+	 * position int x = getWidth() / 2 - bounds.centerX(); int y = getHeight() /
+	 * 2 - bounds.centerY(); // drawing text with appropriate color and size in
+	 * the center canvas.drawText(text, x, y, textPaint); }
+	 * 
+	 * public synchronized void setText(String text) { if (text != null) {
+	 * this.text = text; } else { this.text = ""; } postInvalidate(); }
+	 * 
+	 * public synchronized void setTextSize(float textSize) { this.textSize =
+	 * textSize; postInvalidate(); }
+	 * 
+	 * }
+	 */
 
 	public static class MyAdapter extends FragmentPagerAdapter implements
 			ActionBar.TabListener, ViewPager.OnPageChangeListener {
@@ -439,16 +424,33 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 			Log.i("VotingPageFragmentList", "Item clicked: " + id);
 
 			this.songid = id;
-	         ListView listView = getListView();
-	         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-	         listView.setSelection(0);
-	         listView.setSelected(true);
+			ListView listView = getListView();
+			listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			listView.setSelection(0);
+			listView.setSelected(true);
 			// MainActivity a = (MainActivity) getActivity();
 			// MyApplication app = (MyApplication) a.getApplication();
 			// app.sendMessage((int) id);
 		}
 
+<<<<<<< HEAD
 		
+=======
+		public void submitVote(View view) {
+			// VotingListFragment votefragvar = new VotingListFragment();
+			// long id = votefragvar.songid;
+			// MainActivity a = (MainActivity) getActivity();
+			// MyApplication app = (MyApplication) a.getApplication();
+			// app.sendMessage((int) id);
+			// Context context = a.getApplicationContext();
+			// CharSequence text = "+id";
+			// int duration = Toast.LENGTH_SHORT;
+
+			// Toast toast = Toast.makeText(context, text, duration);
+			// toast.show();
+
+		}
+>>>>>>> eefcbd06aeb148a4179a4d859e855293ead735b8
 
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -475,8 +477,9 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 		// Fragment fm = (Fragment)
 		// getFragmentManager().findFragmentById(R.id.SongListFragment);
 		// FragmentManager.findFragmentById(R.id.songeditText);
-		EditText et;// = (EditText)
-					// getListView().findViewById(R.id.songeditText);
+		public EditText et;// = (EditText)
+
+		// getListView().findViewById(R.id.songeditText);
 
 		/**
 		 * Create a new instance of CountingFragment, providing "num" as an
@@ -519,7 +522,7 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 			// final ListView lv = (ListView) v.findViewById(R.id.1);
 			// //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// final ArrayList<String> ar = new ArrayList<String>();
-			et = (EditText) v.findViewById(R.id.songeditText);
+			// et = (EditText) v.findViewById(R.id.songeditText);
 			// final String[] words = list.TERM;
 			// Populate list with our static array of titles.
 			// lv.setAdapter(new ArrayAdapter(getActivity(),
@@ -543,7 +546,7 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 				public void onTextChanged(CharSequence s, int start,
 						int before, int count) {
 					int textlength = et.getText().length();
-					List<String> songs_sort = new ArrayList<String>();
+					// List<String> songs_sort = new ArrayList<String>();
 					songs_sort.clear();
 					for (int i = 0; i < songs.length; i++) {
 						if (textlength <= songs[i].length()) {
@@ -563,6 +566,10 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 		}
 
 
+		public List<String> songs_sort = new ArrayList<String>();
+		public final String[] songs = new String[100];
+
+
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 
@@ -575,11 +582,65 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 		@Override
 		public void onListItemClick(ListView l, View v, int position, long id) {
 			Log.i("SongListFragmentList", "Item clicked: " + id);
-
+			boolean forcheck = false;
 			MainActivity a = (MainActivity) getActivity();
 			MyApplication app = (MyApplication) a.getApplication();
+			String s;
+			songs_sort.clear();
+			if (songs_sort.isEmpty()){
+				s = "empty";
+			}
+			else
+				s = "full";
+			Log.i("songs", s);
 
-			app.sendMessage((int) id);
+
+			// app.sendMessage((int) id);
+			if (!songs_sort.isEmpty()) {
+				for (int j = 0; j < songs.length && forcheck == false; j++) { 
+					if (songs[j].equals(songs_sort.get((int)id))){
+						id = j;
+						forcheck = true;
+						Log.i("songs", songs_sort.get((int)id));
+						Log.i("songs", songs[j]);
+					}
+					//.contains(et.getText().toString().toLowerCase())) {
+						/*if (songs[j].contains(Integer.toString(1))) {
+							id = j;
+							forcheck = true;
+						} else if (songs[j].contains(Integer.toString(2))) {
+							id = j;
+							forcheck = true;
+						} else if (songs[j].contains(Integer.toString(3))) {
+							id = j;
+							forcheck = true;
+						} else if (songs[j].contains(Integer.toString(4))) {
+							id = j;
+							forcheck = true;
+						} else if (songs[j].contains(Integer.toString(5))) {
+							id = j;
+							forcheck = true;
+						} else if (songs[j].contains(Integer.toString(6))) {
+							id = j;
+							forcheck = true;
+						} else if (songs[j].contains(Integer.toString(7))) {
+							id = j;
+							forcheck = true;
+						} else if (songs[j].contains(Integer.toString(8))) {
+							id = j;
+							forcheck = true;
+						} else if (songs[j].contains(Integer.toString(9))) {
+							id = j;
+							forcheck = true;
+						} else if (songs[j].contains(et.getText().toString().toLowerCase())) {
+							id = j;
+							forcheck = true;
+						}*/
+					//}
+				}
+			}
+
+			//app.sendMessage((int) id);
 			Intent i = new Intent(app, PlayingSong.class);
 			i.putExtra("songname", songs[(int)id]);
 			i.putExtra("songslist", songs);
