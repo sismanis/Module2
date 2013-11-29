@@ -710,11 +710,9 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
-			int i;
-			for(i = 0; i < 100; i++);{
-				songs[i] = "song" + i;
+			for (int i = 0; i < 100; i++) {
+				songs[i] = "song " + Integer.toString(i);
 			}
-
 			
 			super.onActivityCreated(savedInstanceState);
 			setListAdapter(new ArrayAdapter<String>(getActivity(),
@@ -811,7 +809,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 
 	}
 
-	public void loadSongs(View view){
+	/*public void loadSongs(View view){
 		int i;
 		String[] songstemp = new String[100];
 		 final byte shake[] = {0xF};
@@ -859,13 +857,11 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			}
 		
 		}
-		//Fragment fm = new SongListFragment();
-	//	fm.onCreateView();
 		
 		SongListFragment fragment = (SongListFragment) mAdapter.getItem(2);
 				fragment.setListAdapter(new ArrayAdapter<String>(this,
 					android.R.layout.simple_list_item_1, songs));
-	}
+	}*/
 	// Route called when the user presses "connect"
 
 	public void openSocket(View view) {
