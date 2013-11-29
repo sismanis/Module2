@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,7 +45,7 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 
 	MyAdapter mAdapter;
 	static String[] songs;
-
+	static int AndroidId = 0;
 	ViewPager mPager;
 
 	// private ProgressBar mProgress;
@@ -145,6 +146,47 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
+	}
+	
+	public void submitVote(View view) {
+		VotingListFragment votefragvar = new VotingListFragment();
+		long id = votefragvar.songid;
+	//	MainActivity a = (MainActivity) getActivity();
+		MyApplication app = (MyApplication) getApplication();
+		byte[] buf = new byte[1];
+		buf[0]=0x0;
+		app.sendMessage(0x0); 		//vote message
+		if( AndroidId == 0 ){
+			app.sendMessage(0x0);
+		InputStream in;
+			try {
+				in = app.sock.getInputStream();
+				while(buf[0] == 0x0){
+				in.read(buf);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+		AndroidId = (int) buf[0];
+		}
+		else
+		app.sendMessage(AndroidId);
+				// See if any bytes are available from the Middleman
+				
+				
+					
+					
+
+		app.sendMessage((int) id);
+		// Context context = a.getApplicationContext();
+		// CharSequence text = "+id";
+		// int duration = Toast.LENGTH_SHORT;
+
+		// Toast toast = Toast.makeText(context, text, duration);
+		// toast.show();
+
 	}
 
 	/*public class TextProgressBar extends ProgressBar {
@@ -382,7 +424,7 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
-			final String[] votinglist = new String[5];
+			final String[] votinglist = new String[4];
 
 			for (int i = 0; i < 4; i++) {
 				votinglist[i] = "votinglist " + Integer.toString(i);
@@ -406,20 +448,7 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 			// app.sendMessage((int) id);
 		}
 
-		public void submitVote(View view) {
-			//VotingListFragment votefragvar = new VotingListFragment();
-			//long id = votefragvar.songid;
-			//MainActivity a = (MainActivity) getActivity();
-			//MyApplication app = (MyApplication) a.getApplication();
-			//app.sendMessage((int) id);
-			// Context context = a.getApplicationContext();
-			// CharSequence text = "+id";
-			// int duration = Toast.LENGTH_SHORT;
-
-			// Toast toast = Toast.makeText(context, text, duration);
-			// toast.show();
-
-		}
+		
 
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -483,9 +512,10 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 				Bundle savedInstanceState) {
 			View v = inflater.inflate(R.layout.fragment_pager_list, container,
 					false);
+			int i;
 			View tv = v.findViewById(R.id.text);
 			((TextView) tv).setText("Song List");
-
+			
 			// final ListView lv = (ListView) v.findViewById(R.id.1);
 			// //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// final ArrayList<String> ar = new ArrayList<String>();
@@ -494,8 +524,8 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 			// Populate list with our static array of titles.
 			// lv.setAdapter(new ArrayAdapter(getActivity(),
 			// android.R.layout.simple_list_item_activated_1, songs));
-			setListAdapter(new ArrayAdapter<String>(getActivity(),
-					android.R.layout.simple_list_item_activated_1, songs));
+			//setListAdapter(new ArrayAdapter<String>(getActivity(),
+				//	android.R.layout.simple_list_item_activated_1, songs));
 			// setTextFilterEnabled(true);
 
 			et = (EditText) v.findViewById(R.id.songeditText);
@@ -579,11 +609,14 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 	}
 
 	public void loadSongs(View view){
+		Log.i("running:", "running");
 		int i;
 		String[] songstemp = new String[100];
 		 final byte shake[] = {0xF};
-		 byte buf[] = new byte[20];
+		 byte buf[] = new byte[128];
+		 byte bufstore[] = new byte[1000];
 		 int bufcount=0;
+		 int current= 0;
 		 boolean done = false;
 		//public boolean transmitting = false;
 		int songnumber = 0;
@@ -591,28 +624,46 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 		MyApplication app = (MyApplication) getApplication();
 		if (app.sock != null && app.sock.isConnected() && !app.sock.isClosed() ) {
 			//transmitting = true;
+			Log.i("socket","socket");
 			InputStream in;
 			try {
 				in = app.sock.getInputStream();
 			
 			
+				
+			
+			in.read(buf);
+			for(i= 0; i<buf.length-1; i++){
+				current +=i;
+			if(buf[i]== 0x0)
+				done = true;
+			if(done == false)
+				bufstore[current] = buf[i];
+			}
 					// See if any bytes are available from the Middleman
 					
-					
+					Log.i("pastsocket","pastsocet");
 						in.read(buf);
-						while(buf[bufcount]!= 0x0){
+						Log.i("buf", buf.toString());
+						int stringcount = 0;
+						for(stringcount = 0; buf[stringcount]!= 0x0; stringcount++){
 						// If so, read them in and create a sring
 						//bufcount = 0;
-						while(buf[bufcount]!=0x1){
-						in.read(buf);
-						bufcount++;
-						}
-						songstemp[songnumber]  = new String(buf, 0, bufcount-1, "US-ASCII");
+						if(buf[stringcount] == 0x1){
+						songstemp[songnumber]  = new String(buf, bufcount, stringcount-bufcount, "US-ASCII");
 						Log.i("song", songstemp[songnumber]);
 						songnumber++;
-						buf = new byte[20];
-						in.read(buf);
-						bufcount = 0;
+						bufcount = stringcount+1;
+						}
+						else if( buf[buf.length-1] == 0x2){
+							
+							app.sendMessage(0x0);
+						
+							in.read(buf);
+						}
+						//buf = new byte[20];
+						//in.read(buf);
+						//bufcount = 0;
 					}
 
 					
@@ -624,13 +675,15 @@ public class MainActivity extends FragmentActivity{// implements ProgressBar{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 		
 		}
 		//Fragment fm = new SongListFragment();
 	//	fm.onCreateView();
 		
-	//	fm.setListAdapter(new ArrayAdapter<String>(a.getActivity(),
-		//			android.R.layout.simple_list_item_1, songs));
+		SongListFragment fm = (SongListFragment) mAdapter.getItem(2);
+		fm.setListAdapter(new ArrayAdapter<String>(this,
+					android.R.layout.simple_list_item_1, songs));
 	}
 	// Route called when the user presses "connect"
 

@@ -77,7 +77,7 @@ public void forwardClick(View v){
 	app.sendMessage(253);
 	
 	currentsong = currentsong + 1;
-	//Log.i("fuck", songlist[currentsong]);
+	//Log.i("", songlist[currentsong]);
 	TextView text = (TextView) findViewById(R.id.textView1);
 
 	text.setText((String) songlist[currentsong]);
