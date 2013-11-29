@@ -154,37 +154,32 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		super.onSaveInstanceState(outState);
 		outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
 	}
-	
+
 	public void submitVote(View view) {
 		VotingListFragment votefragvar = new VotingListFragment();
 		long id = votefragvar.songid;
-	//	MainActivity a = (MainActivity) getActivity();
+		// MainActivity a = (MainActivity) getActivity();
 		MyApplication app = (MyApplication) getApplication();
 		byte[] buf = new byte[1];
-		buf[0]=0x0;
-		app.sendMessage(0x0); 		//vote message
-		if( AndroidId == 0 ){
+		buf[0] = 0x0;
+		app.sendMessage(0x0); // vote message
+		if (AndroidId == 0) {
 			app.sendMessage(0x0);
-		InputStream in;
+			InputStream in;
 			try {
 				in = app.sock.getInputStream();
-				while(buf[0] == 0x0){
-				in.read(buf);
+				while (buf[0] == 0x0) {
+					in.read(buf);
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	
-		AndroidId = (int) buf[0];
-		}
-		else
-		app.sendMessage(AndroidId);
-				// See if any bytes are available from the Middleman
-				
-				
-					
-					
+
+			AndroidId = (int) buf[0];
+		} else
+			app.sendMessage(AndroidId);
+		// See if any bytes are available from the Middleman
 
 		app.sendMessage((int) id);
 		// Context context = a.getApplicationContext();
@@ -294,7 +289,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 					mViewPager.setCurrentItem(i);
 				}
 			}
-			
+
 		}
 
 		@Override
@@ -433,29 +428,10 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 			listView.setSelection(0);
 			listView.setSelected(true);
-			// MainActivity a = (MainActivity) getActivity();
-			// MyApplication app = (MyApplication) a.getApplication();
-			// app.sendMessage((int) id);
+			MainActivity a = (MainActivity) getActivity();
+			MyApplication app = (MyApplication) a.getApplication();
+			app.sendMessage((int) id);
 		}
-
-//<<<<<<< HEAD
-//		
-//=======
-		public void submitVote(View view) {
-			// VotingListFragment votefragvar = new VotingListFragment();
-			// long id = votefragvar.songid;
-			// MainActivity a = (MainActivity) getActivity();
-			// MyApplication app = (MyApplication) a.getApplication();
-			// app.sendMessage((int) id);
-			// Context context = a.getApplicationContext();
-			// CharSequence text = "+id";
-			// int duration = Toast.LENGTH_SHORT;
-
-			// Toast toast = Toast.makeText(context, text, duration);
-			// toast.show();
-
-		}
-//>>>>>>> eefcbd06aeb148a4179a4d859e855293ead735b8
 
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -523,7 +499,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			int i;
 			View tv = v.findViewById(R.id.text);
 			((TextView) tv).setText("Song List");
-			
+
 			// final ListView lv = (ListView) v.findViewById(R.id.1);
 			// //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// final ArrayList<String> ar = new ArrayList<String>();
@@ -532,8 +508,8 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			// Populate list with our static array of titles.
 			// lv.setAdapter(new ArrayAdapter(getActivity(),
 			// android.R.layout.simple_list_item_activated_1, songs));
-			//setListAdapter(new ArrayAdapter<String>(getActivity(),
-				//	android.R.layout.simple_list_item_activated_1, songs));
+			// setListAdapter(new ArrayAdapter<String>(getActivity(),
+			// android.R.layout.simple_list_item_activated_1, songs));
 			// setTextFilterEnabled(true);
 
 			et = (EditText) v.findViewById(R.id.songeditText);
@@ -570,15 +546,12 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			return v;
 		}
 
-
 		public List<String> songs_sort = new ArrayList<String>();
-		public final String[] songs = new String[100];
-
+	//	public final String[] songs = new String[100];
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 
-			
 			super.onActivityCreated(savedInstanceState);
 			setListAdapter(new ArrayAdapter<String>(getActivity(),
 					android.R.layout.simple_list_item_1, songs));
@@ -592,66 +565,54 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			MyApplication app = (MyApplication) a.getApplication();
 			String s;
 			songs_sort.clear();
-			if (songs_sort.isEmpty()){
+			if (songs_sort.isEmpty()) {
 				s = "empty";
-			}
-			else
+			} else
 				s = "full";
 			Log.i("songs", s);
 
-
 			// app.sendMessage((int) id);
 			if (!songs_sort.isEmpty()) {
-				for (int j = 0; j < songs.length && forcheck == false; j++) { 
-					if (songs[j].equals(songs_sort.get((int)id))){
+				for (int j = 0; j < songs.length && forcheck == false; j++) {
+					if (songs[j].equals(songs_sort.get((int) id))) {
 						id = j;
 						forcheck = true;
-						Log.i("songs", songs_sort.get((int)id));
+						Log.i("songs", songs_sort.get((int) id));
 						Log.i("songs", songs[j]);
 					}
-					//.contains(et.getText().toString().toLowerCase())) {
-						/*if (songs[j].contains(Integer.toString(1))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(2))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(3))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(4))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(5))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(6))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(7))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(8))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(9))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(et.getText().toString().toLowerCase())) {
-							id = j;
-							forcheck = true;
-						}*/
-					//}
+					// .contains(et.getText().toString().toLowerCase())) {
+					/*
+					 * if (songs[j].contains(Integer.toString(1))) { id = j;
+					 * forcheck = true; } else if
+					 * (songs[j].contains(Integer.toString(2))) { id = j;
+					 * forcheck = true; } else if
+					 * (songs[j].contains(Integer.toString(3))) { id = j;
+					 * forcheck = true; } else if
+					 * (songs[j].contains(Integer.toString(4))) { id = j;
+					 * forcheck = true; } else if
+					 * (songs[j].contains(Integer.toString(5))) { id = j;
+					 * forcheck = true; } else if
+					 * (songs[j].contains(Integer.toString(6))) { id = j;
+					 * forcheck = true; } else if
+					 * (songs[j].contains(Integer.toString(7))) { id = j;
+					 * forcheck = true; } else if
+					 * (songs[j].contains(Integer.toString(8))) { id = j;
+					 * forcheck = true; } else if
+					 * (songs[j].contains(Integer.toString(9))) { id = j;
+					 * forcheck = true; } else if
+					 * (songs[j].contains(et.getText()
+					 * .toString().toLowerCase())) { id = j; forcheck = true; }
+					 */
+					// }
 				}
 			}
 
-			//app.sendMessage((int) id);
+			app.sendMessage((int) id);
 			Intent i = new Intent(app, PlayingSong.class);
-			i.putExtra("songname", songs[(int)id]);
+			i.putExtra("songname", songs[(int) id]);
 			i.putExtra("songslist", songs);
 			i.putExtra("cursong", (int) id);
 			startActivity(i);
-		
 
 		}
 
@@ -673,130 +634,132 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		}
 
 	}
+
 	private static final int PROGRESS = 0x1;
 
-    private ProgressBar mProgress;
-    private int mProgressStatus = 0;
+	private ProgressBar mProgress;
+	private int mProgressStatus = 0;
 
-    private Handler mHandler = new Handler();
-    
-    protected void startprogressbar(){//Bundle icicle) {
-        //super.onCreate(icicle);
-    	mProgressStatus = 0;
-        //setContentView(R.layout.progressbar_activity);
+	private Handler mHandler = new Handler();
 
-        mProgress = (ProgressBar) findViewById(R.id.adprogress_progressBar);
+	protected void startprogressbar() {// Bundle icicle) {
+		// super.onCreate(icicle);
+		mProgressStatus = 0;
+		// setContentView(R.layout.progressbar_activity);
 
-        // Start lengthy operation in a background thread
-        new Thread(new Runnable() {
-            public void run() {
-               while (mProgressStatus < 100) {
-                   //waitsec();
-            	   if(mProgressStatus == 90){
-            		   try {
-            		        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            		        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-            		        r.play();
-            		    } catch (Exception e) {}
-            	   }
-            	   try {
-            		    Thread.sleep(1000);
-            		} catch (InterruptedException e) {
-            		    e.printStackTrace();
-            		}
-            	   mProgressStatus =  mProgressStatus + 5;
+		mProgress = (ProgressBar) findViewById(R.id.adprogress_progressBar);
 
-                    // Update the progress bar
-                    mHandler.post(new Runnable() {
-                        public void run() {
-                            mProgress.setProgress(mProgressStatus);
-                        }
-                    });
-               }
-            }
-        }).start();
-    }
+		// Start lengthy operation in a background thread
+		new Thread(new Runnable() {
+			public void run() {
+				while (mProgressStatus < 100) {
+					// waitsec();
+					if (mProgressStatus == 90) {
+						try {
+							Uri notification = RingtoneManager
+									.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+							Ringtone r = RingtoneManager.getRingtone(
+									getApplicationContext(), notification);
+							r.play();
+						} catch (Exception e) {
+						}
+					}
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					mProgressStatus = mProgressStatus + 5;
 
-	public void loadSongs(View view){
+					// Update the progress bar
+					mHandler.post(new Runnable() {
+						public void run() {
+							mProgress.setProgress(mProgressStatus);
+						}
+					});
+				}
+			}
+		}).start();
+	}
+
+	public void loadSongs(View view) {
 		Log.i("running:", "running");
-		
-		
+
 		int i;
 		String[] songstemp = new String[100];
-		 final byte shake[] = {0xF};
-		 byte buf[] = new byte[128];
-		 byte bufstore[] = new byte[1000];
-		 int bufcount=0;
-		 int current= 0;
-		 boolean done = false;
-		//public boolean transmitting = false;
+		final byte shake[] = { 0xF };
+		byte buf[] = new byte[1000];
+		byte bufstore[] = new byte[1000];
+		int bufcount = 0;
+		int current = 0;
+		boolean done = false;
+		// public boolean transmitting = false;
 		int songnumber = 0;
-	//	MainActivity a = (MainActivity) getActivity();
+		// MainActivity a = (MainActivity) getActivity();
 		MyApplication app = (MyApplication) getApplication();
-		//app.sendMessage(101);
-		if (app.sock != null && app.sock.isConnected() && !app.sock.isClosed() ) {
-			//transmitting = true;
-			Log.i("socket","socket");
+		// app.sendMessage(101);
+		if (app.sock != null && app.sock.isConnected() && !app.sock.isClosed()) {
+			// transmitting = true;
+			Log.i("socket", "socket");
 			InputStream in;
 			try {
 				in = app.sock.getInputStream();
-			
-			
-				
-			
-			in.read(buf);
-			for(i= 0; i<buf.length-1; i++){
-				current +=i;
-			if(buf[i]== 0x0)
-				done = true;
-			if(done == false)
-				bufstore[current] = buf[i];
-			}
-					// See if any bytes are available from the Middleman
+				//while(done ==false){
+				in.read(buf);
+			/*	for (i = 0; i < buf.length; i++) {
 					
-					Log.i("pastsocket","pastsocet");
-						in.read(buf);
-						Log.i("buf", buf.toString());
-						int stringcount = 0;
-						for(stringcount = 0; buf[stringcount]!= 0x0; stringcount++){
-						// If so, read them in and create a sring
-						//bufcount = 0;
-						if(buf[stringcount] == 0x1){
-						songstemp[songnumber]  = new String(buf, bufcount, stringcount-bufcount, "US-ASCII");
+					if (buf[i] == 0x0)
+						done = true;
+					else if ( buf[i] == 0x2)
+						bufstore[current] = buf[i];
+					current ++;
+				}
+				}*/
+				// See if any bytes are available from the Middleman
+
+				Log.i("pastsocket", "pastsocet");
+				//in.read(buf);
+				Log.i("buf", buf.toString());
+				int stringcount = 0;
+				for (stringcount = 0; buf[stringcount] != 0x0; stringcount++) {
+					// If so, read them in and create a sring
+					 //bufcount = stringcount;
+					if (buf[stringcount] == 0x1) {
+						songstemp[songnumber] = new String(buf, bufcount,
+								stringcount - bufcount, "US-ASCII");
 						Log.i("song", songstemp[songnumber]);
 						songnumber++;
-						bufcount = stringcount+1;
-						}
-						else if( buf[buf.length-1] == 0x2){
-							
-							app.sendMessage(0x0);
-						
-							in.read(buf);
-						}
-						//buf = new byte[20];
-						//in.read(buf);
-						//bufcount = 0;
-					}
+						bufcount = stringcount + 1;
+					}/* else if (buf[buf.length - 1] == 0x2) {
 
-					
-						songs = new String[songnumber];
-					for( i = 0; i<songnumber; i++){
-						songs[i] = songstemp[i];
-					}
-					} catch (IOException e) {
+						app.sendMessage(0x0);
+
+						in.read(buf);
+					}*/
+					// buf = new byte[20];
+					// in.read(buf);
+					// bufcount = 0;
+				}
+
+				songs = new String[songnumber];
+				for (i = 0; i < songnumber; i++) {
+					songs[i] = songstemp[i];
+					Log.i("songs:", songs[i]);
+				}
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-		
+
 		}
-		//Fragment fm = new SongListFragment();
-	//	fm.onCreateView();
-		
+		// Fragment fm = new SongListFragment();
+		// fm.onCreateView();
+
 		SongListFragment fm = (SongListFragment) mAdapter.getItem(2);
 		fm.setListAdapter(new ArrayAdapter<String>(this,
-					android.R.layout.simple_list_item_1, songs));
+				android.R.layout.simple_list_item_1, songs));
 	}
+
 	// Route called when the user presses "connect"
 
 	public void openSocket(View view) {
@@ -817,8 +780,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 
 		new SocketConnect().execute((Void) null);
 		startprogressbar();
-		
-		
+
 	}
 
 	// Called when the user closes a socket
@@ -907,38 +869,38 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			if (app.sock != null && app.sock.isConnected()
 					&& !app.sock.isClosed()) {
 
-				//try {
-				//	InputStream in = app.sock.getInputStream();
+				// try {
+				// InputStream in = app.sock.getInputStream();
 
-					// See if any bytes are available from the Middleman
+				// See if any bytes are available from the Middleman
 
-					//int bytes_avail = in.available();
-				//	if (bytes_avail > 0) {
+				// int bytes_avail = in.available();
+				// if (bytes_avail > 0) {
 
-						// If so, read them in and create a sring
+				// If so, read them in and create a sring
 
-						//byte buf[] = new byte[bytes_avail];
-						//in.read(buf);
+				// byte buf[] = new byte[bytes_avail];
+				// in.read(buf);
 
-						// final String s = new String(buf, 0, bytes_avail,
-						// "US-ASCII");
+				// final String s = new String(buf, 0, bytes_avail,
+				// "US-ASCII");
 
-						// As explained in the tutorials, the GUI can not be
-						// updated in an asyncrhonous task. So, update the GUI
-						// using the UI thread.
+				// As explained in the tutorials, the GUI can not be
+				// updated in an asyncrhonous task. So, update the GUI
+				// using the UI thread.
 
-						// runOnUiThread(new Runnable() {
-						// public void run() {
-						// EditText et = (EditText)
-						// findViewById(R.id.RecvdMessage);
-						// et.setText(s);
-						// }
-						// });
+				// runOnUiThread(new Runnable() {
+				// public void run() {
+				// EditText et = (EditText)
+				// findViewById(R.id.RecvdMessage);
+				// et.setText(s);
+				// }
+				// });
 
-				//	}
-			//	} catch (IOException e) {
-				//	e.printStackTrace();
-				//}
+				// }
+				// } catch (IOException e) {
+				// e.printStackTrace();
+				// }
 			}
 		}
 	}
