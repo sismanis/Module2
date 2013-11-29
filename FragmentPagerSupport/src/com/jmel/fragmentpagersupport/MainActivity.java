@@ -1,7 +1,6 @@
 package com.jmel.fragmentpagersupport;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -17,14 +16,12 @@ import org.json.JSONObject;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
-import android.app.DownloadManager.Request;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.service.textservice.SpellCheckerService.Session;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -70,6 +67,10 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 	// private Handler mHandler = new Handler();
 	// ProgressBar progress_bar;
 
+	MyAdapter getAdapter() {
+		return mAdapter;
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -283,6 +284,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 
 	}
 
+
 	public static class HomePageFragment extends Fragment implements // ///////////////////////////////////////////////////////////////////////////////////////////
 			ActionBar.TabListener {
 		int mNum;
@@ -452,7 +454,15 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		        }
 
 		        Bundle postParams = new Bundle();
-		        postParams.putString("name", "Party Shuffle!");
+		        
+		        MainActivity a = (MainActivity) getActivity();
+		        
+		        SongListFragment fragment = (SongListFragment) a.getAdapter().getItem(2);
+		        
+		        long id = fragment.songid;
+		        Log.i("songs", Integer.toString((int)id));
+		        Log.i("songs", Integer.toString((int)fragment.songid));
+		        postParams.putString("name", "I'm Listening to song " + id + "!");
 		        postParams.putString("caption", "Listen to a song and vote on the next one with your friends!");
 		        postParams.putString("description", "Project created by Jesse Melamed, Alex Sismanis, Justin Siu and Andrew Whitman.");
 		        postParams.putString("link", "https://developers.facebook.com/android");
@@ -493,6 +503,8 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		    }
 
 		}
+		
+		
 		
 		private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
 		    for (String string : subset) {
@@ -613,9 +625,9 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			ActionBar.TabListener {// , TextWatcher {
 		int mNum;
 		String pagename;
-		// Fragment fm = (Fragment)
-		// getFragmentManager().findFragmentById(R.id.SongListFragment);
-		// FragmentManager.findFragmentById(R.id.songeditText);
+		long songid;
+
+
 		public EditText et;// = (EditText)
 
 		// getListView().findViewById(R.id.songeditText);
@@ -656,18 +668,6 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 					false);
 			View tv = v.findViewById(R.id.text);
 			((TextView) tv).setText("Song List");
-
-			// final ListView lv = (ListView) v.findViewById(R.id.1);
-			// //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			// final ArrayList<String> ar = new ArrayList<String>();
-			// et = (EditText) v.findViewById(R.id.songeditText);
-			// final String[] words = list.TERM;
-			// Populate list with our static array of titles.
-			// lv.setAdapter(new ArrayAdapter(getActivity(),
-			// android.R.layout.simple_list_item_activated_1, songs));
-			setListAdapter(new ArrayAdapter<String>(getActivity(),
-					android.R.layout.simple_list_item_activated_1, songs));
-			// setTextFilterEnabled(true);
 
 			et = (EditText) v.findViewById(R.id.songeditText);
 
@@ -723,16 +723,10 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		public void onListItemClick(ListView l, View v, int position, long id) {
 			Log.i("SongListFragmentList", "Item clicked: " + id);
 			boolean forcheck = false;
+			this.songid = id;
+			Log.i("songs", Integer.toString((int)this.songid));
 			MainActivity a = (MainActivity) getActivity();
 			MyApplication app = (MyApplication) a.getApplication();
-			String s;
-			songs_sort.clear();
-			if (songs_sort.isEmpty()){
-				s = "empty";
-			}
-			else
-				s = "full";
-			Log.i("songs", s);
 
 
 			// app.sendMessage((int) id);
@@ -741,42 +735,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 					if (songs[j].equals(songs_sort.get((int)id))){
 						id = j;
 						forcheck = true;
-						Log.i("songs", songs_sort.get((int)id));
-						Log.i("songs", songs[j]);
 					}
-					//.contains(et.getText().toString().toLowerCase())) {
-						/*if (songs[j].contains(Integer.toString(1))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(2))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(3))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(4))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(5))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(6))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(7))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(8))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(Integer.toString(9))) {
-							id = j;
-							forcheck = true;
-						} else if (songs[j].contains(et.getText().toString().toLowerCase())) {
-							id = j;
-							forcheck = true;
-						}*/
-					//}
 				}
 			}
 
@@ -864,21 +823,9 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 	}*/
 	// Route called when the user presses "connect"
 
+
 	public void openSocket(View view) {
-		// MyApplication app = (MyApplication) getApplication();
-		// TextView msgbox = (TextView) findViewById(R.id.error_message_box);
 
-		// Make sure the socket is not already opened
-
-		// if (app.sock != null && app.sock.isConnected() &&
-		// !app.sock.isClosed()) {
-		// msgbox.setText("Socket already open");
-		// return;
-		// }
-
-		// open the socket. SocketConnect is a new subclass
-		// (defined below). This creates an instance of the subclass
-		// and executes the code in it.
 
 		new SocketConnect().execute((Void) null);
 		
@@ -971,38 +918,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			if (app.sock != null && app.sock.isConnected()
 					&& !app.sock.isClosed()) {
 
-				//try {
-				//	InputStream in = app.sock.getInputStream();
 
-					// See if any bytes are available from the Middleman
-
-					//int bytes_avail = in.available();
-				//	if (bytes_avail > 0) {
-
-						// If so, read them in and create a sring
-
-						//byte buf[] = new byte[bytes_avail];
-						//in.read(buf);
-
-						// final String s = new String(buf, 0, bytes_avail,
-						// "US-ASCII");
-
-						// As explained in the tutorials, the GUI can not be
-						// updated in an asyncrhonous task. So, update the GUI
-						// using the UI thread.
-
-						// runOnUiThread(new Runnable() {
-						// public void run() {
-						// EditText et = (EditText)
-						// findViewById(R.id.RecvdMessage);
-						// et.setText(s);
-						// }
-						// });
-
-				//	}
-			//	} catch (IOException e) {
-				//	e.printStackTrace();
-				//}
 			}
 		}
 	}
