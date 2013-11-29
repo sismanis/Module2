@@ -712,6 +712,10 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
+			int i;
+			for(i = 0; i < 100; i++);{
+				songs[i] = "song" + i;
+			}
 
 			
 			super.onActivityCreated(savedInstanceState);
