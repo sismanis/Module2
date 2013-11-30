@@ -690,8 +690,9 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		int i;
 		String[] songstemp = new String[100];
 		final byte shake[] = { 0xF };
-		byte buf[] = new byte[1000];
-		byte bufstore[] = new byte[1000];
+		byte buf[];
+		byte bufstore[]; 
+				bufstore = new byte[500];
 		int bufcount = 0;
 		int current = 0;
 		boolean done = false;
@@ -708,28 +709,43 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			InputStream in;
 			try {
 				in = app.sock.getInputStream();
-				//while(done ==false){
+				buf = new byte[200];
+				//app.sendMessage(231);
+
+			in.read(buf);
+			for (i = 0; buf[i]!=0x0 && done == false; i++) {
+				
+				bufstore[bufcount] = buf[i];
+				bufcount++;
+				if(buf[i]== 0xf)
+					done = true;
+			}
+				
+				while(!done){
+					buf = new byte[130];
+					app.sendMessage(231);
+
 				in.read(buf);
-			/*	for (i = 0; i < buf.length; i++) {
+				for (i = 0; buf[i]!=0 && done == false; i++) {
 					
-					if (buf[i] == 0x0)
+					bufstore[bufcount] = buf[i];
+					bufcount++;
+					if(buf[i]== 0xf)
 						done = true;
-					else if ( buf[i] == 0x2)
-						bufstore[current] = buf[i];
-					current ++;
 				}
-				}*/
+			}
 				// See if any bytes are available from the Middleman
 
 				Log.i("pastsocket", "pastsocet");
 				//in.read(buf);
-				Log.i("buf", buf.toString());
+				Log.i("bufstore", bufstore.toString());
+				bufcount = 0;
 				int stringcount = 0;
-				for (stringcount = 0; buf[stringcount] != 0x0; stringcount++) {
+				for (stringcount = 0; bufstore[stringcount] != 0xf; stringcount++) {
 					// If so, read them in and create a sring
 					 //bufcount = stringcount;
-					if (buf[stringcount] == 0x1) {
-						songstemp[songnumber] = new String(buf, bufcount,
+					if (bufstore[stringcount] == 0x1) {
+						songstemp[songnumber] = new String(bufstore, bufcount,
 								stringcount - bufcount, "US-ASCII");
 						Log.i("song", songstemp[songnumber]);
 						songnumber++;
