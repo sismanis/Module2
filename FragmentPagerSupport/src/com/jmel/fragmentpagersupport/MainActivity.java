@@ -57,12 +57,9 @@ public class MainActivity extends FragmentActivity implements
 	ViewPager mPager;
 
 	// FB
-	private HomePageFragment homePageFragment;
+	//private HomePageFragment homePageFragment;
 
-	// private ProgressBar mProgress;
-	// private int mProgressStatus = 0;
-	// private Handler mHandler = new Handler();
-	// ProgressBar progress_bar;
+
 
 	MyAdapter getAdapter() {
 		return mAdapter;
@@ -364,85 +361,75 @@ public class MainActivity extends FragmentActivity implements
 
 		@Override
 		public void onSaveInstanceState(Bundle outState) {
-			super.onSaveInstanceState(outState);
-			outState.putBoolean(PENDING_PUBLISH_KEY,
-					pendingPublishReauthorization);
-			uiHelper.onSaveInstanceState(outState);
-		}
 
+		    super.onSaveInstanceState(outState);
+		    outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
+		    uiHelper.onSaveInstanceState(outState);
+		}
+		
 		private void publishStory() {
-			com.facebook.Session session = com.facebook.Session
-					.getActiveSession();
+		    com.facebook.Session session = com.facebook.Session.getActiveSession();
 
-			if (session != null) {
+		    if (session != null){
 
-				// Check for publish permissions
-				List<String> permissions = session.getPermissions();
-				if (!isSubsetOf(PERMISSIONS, permissions)) {
-					pendingPublishReauthorization = true;
-					com.facebook.Session.NewPermissionsRequest newPermissionsRequest = new com.facebook.Session.NewPermissionsRequest(
-							this, PERMISSIONS);
-					session.requestNewPublishPermissions(newPermissionsRequest);
-					return;
-				}
+		        // Check for publish permissions    
+		        List<String> permissions = session.getPermissions();
+		        if (!isSubsetOf(PERMISSIONS, permissions)) {
+		            pendingPublishReauthorization = true;
+		            com.facebook.Session.NewPermissionsRequest newPermissionsRequest = new com.facebook.Session
+		                    .NewPermissionsRequest(this, PERMISSIONS);
+		        session.requestNewPublishPermissions(newPermissionsRequest);
+		            return;
+		        }
 
-				Bundle postParams = new Bundle();
-				postParams.putString("name", "Facebook SDK for Android");
-				postParams.putString("caption",
-						"Build great social apps and get more installs.");
-				postParams
-						.putString(
-								"description",
-								"The Facebook SDK for Android makes it easier and faster to develop Facebook integrated Android apps.");
-				postParams.putString("link",
-						"https://developers.facebook.com/android");
-				postParams
-						.putString("picture",
-								"https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
+		        Bundle postParams = new Bundle();
+		        postParams.putString("name", "Facebook SDK for Android");
+		        postParams.putString("caption", "Build great social apps and get more installs.");
+		        postParams.putString("description", "The Facebook SDK for Android makes it easier and faster to develop Facebook integrated Android apps.");
+		        postParams.putString("link", "https://developers.facebook.com/android");
+		        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
 
-				com.facebook.Request.Callback callback = new com.facebook.Request.Callback() {
-					public void onCompleted(Response response) {
-						JSONObject graphResponse = response.getGraphObject()
-								.getInnerJSONObject();
-						String postId = null;
-						try {
-							postId = graphResponse.getString("id");
-						} catch (JSONException e) {
-							Log.i(TAG, "JSON error " + e.getMessage());
-						}
-						FacebookRequestError error = response.getError();
-						if (error != null) {
-							Toast.makeText(
-									getActivity().getApplicationContext(),
-									error.getErrorMessage(), Toast.LENGTH_SHORT)
-									.show();
-						} else {
-							Toast.makeText(
-									getActivity().getApplicationContext(),
-									postId, Toast.LENGTH_LONG).show();
-						}
-					}
-				};
+		        com.facebook.Request.Callback callback= new com.facebook.Request.Callback() {
+		            public void onCompleted(Response response) {
+		                JSONObject graphResponse = response.getGraphObject().getInnerJSONObject();
+		                String postId = null;
+		                try {
+		                    postId = graphResponse.getString("id");
+		                } catch (JSONException e) {
+		                    Log.i(TAG,
+		                        "JSON error "+ e.getMessage());
+		                }
+		                FacebookRequestError error = response.getError();
+		                if (error != null) {
+		                    Toast.makeText(getActivity()
+		                         .getApplicationContext(),
+		                         error.getErrorMessage(),
+		                         Toast.LENGTH_SHORT).show();
+		                    } else {
+		                        Toast.makeText(getActivity()
+		                             .getApplicationContext(), 
+		                             postId,
+		                             Toast.LENGTH_LONG).show();
+		                }
+		            }
+		        };
 
-				com.facebook.Request request = new com.facebook.Request(
-						session, "me/feed", postParams, HttpMethod.POST,
-						callback);
+		        com.facebook.Request request = new com.facebook.Request(session, "me/feed", postParams, 
+		                              HttpMethod.POST, callback);
 
-				com.facebook.RequestAsyncTask task = new com.facebook.RequestAsyncTask(
-						request);
-				task.execute();
-			}
+		        com.facebook.RequestAsyncTask task = new com.facebook.RequestAsyncTask(request);
+		        task.execute();
+		    }
 
 		}
-
-		private boolean isSubsetOf(Collection<String> subset,
-				Collection<String> superset) {
-			for (String string : subset) {
-				if (!superset.contains(string)) {
-					return false;
-				}
-			}
-			return true;
+		
+		private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
+		    for (String string : subset) {
+		        if (!superset.contains(string)) {
+		            return false;
+		        }
+		    }
+		    return true;
 		}
 
 		@Override
@@ -459,9 +446,9 @@ public class MainActivity extends FragmentActivity implements
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
 			// TODO Auto-generated method stub
 
-		}
 
-	}
+		}
+}
 
 	/*
 	 * public void loadSongs(View view){ int i; String[] songstemp = new
