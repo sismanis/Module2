@@ -2,6 +2,7 @@ package com.jmel.fragmentpagersupport;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -129,11 +130,17 @@ public class SongListFragment extends ListFragment implements
 			songs[i] = "song " + Integer.toString(i);
 		}
 		mCallback.OnSongSelected(songs);
-		/*
-		 * Random gen = new Random(); int vote1; int i =0; while (i < 4) { vote1
-		 * = gen.nextInt(); if (vote1 < 100) { voting[i] = songs[vote1]; i++; }
-		 * }
-		 */
+
+		Random gen = new Random();
+		int vote1;
+		int i = 0;
+		while (i < 4) {
+			vote1 = gen.nextInt();
+			if (vote1 < 100) {
+				voting[i] = songs[vote1];
+				i++;
+			}
+		}
 
 		super.onActivityCreated(savedInstanceState);
 		setListAdapter(new ArrayAdapter<String>(getActivity(),
@@ -149,7 +156,7 @@ public class SongListFragment extends ListFragment implements
 		MainActivity a = (MainActivity) getActivity();
 		MyApplication app = (MyApplication) a.getApplication();
 
-		//mCallback.OnSongSelected(id);
+		// mCallback.OnSongSelected(id);
 
 		// app.sendMessage((int) id);
 		if (!songs_sort.isEmpty()) {
