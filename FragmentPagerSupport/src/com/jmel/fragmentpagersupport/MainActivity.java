@@ -1,17 +1,35 @@
 package com.jmel.fragmentpagersupport;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.FragmentTransaction;
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -19,14 +37,20 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +59,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookRequestError;
@@ -43,6 +70,7 @@ import com.facebook.Response;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
 //import java.io.OutputStream;
+
 
 //import java.io.OutputStream;
 
@@ -55,7 +83,16 @@ public class MainActivity extends FragmentActivity implements
 	static String[] songs;
 	static String song;
 
+	static int AndroidId = 0;
 	ViewPager mPager;
+	static int songquantity= 0;
+	static boolean[] votecheck;
+	public static boolean mode = false;
+	static String[] votesongs;
+	int[] id= new int[4];
+	static int[] votecount = new int[4];
+	int totalvotings= 0;
+	//public List<String> voting_list = new ArrayList<String>();
 
 	// FB
 	//private HomePageFragment homePageFragment;
@@ -102,6 +139,7 @@ public class MainActivity extends FragmentActivity implements
 		Timer tcp_timer = new Timer();
 		tcp_timer.schedule(tcp_task, 3000, 500);
 
+
 		// Set up a timer task. We will use the timer to check the
 		// input queue every 500 ms
 
@@ -125,6 +163,7 @@ public class MainActivity extends FragmentActivity implements
 				//.getItem(1);
 		MainActivity.song = s;
 
+
 	}
 
 	@Override
@@ -141,7 +180,9 @@ public class MainActivity extends FragmentActivity implements
 		super.onSaveInstanceState(outState);
 		outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
 
+
 	}
+
 
 	public static class MyAdapter extends FragmentPagerAdapter implements
 			ActionBar.TabListener, ViewPager.OnPageChangeListener {
@@ -213,6 +254,7 @@ public class MainActivity extends FragmentActivity implements
 					mViewPager.setCurrentItem(i);
 				}
 			}
+
 
 		}
 
@@ -299,6 +341,7 @@ public class MainActivity extends FragmentActivity implements
 						PENDING_PUBLISH_KEY, false);
 			}
 
+
 			return v;
 		}
 
@@ -326,6 +369,23 @@ public class MainActivity extends FragmentActivity implements
 				onSessionStateChange(session, state, exception);
 			}
 		};
+
+
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			//final String[] votinglist = new String[4];
+			super.onActivityCreated(savedInstanceState);
+			/*votesongs = new String[4];
+		
+			for (int i = 0; i < 4; i++) {
+				votesongs[i] = "votinglist " + Integer.toString(i);
+			}
+			
+			setListAdapter(new ArrayAdapter<String>(getActivity(),
+					android.R.layout.simple_list_item_single_choice, votesongs));*/
+		}
+
+
 
 		@Override
 		public void onResume() {
@@ -360,13 +420,7 @@ public class MainActivity extends FragmentActivity implements
 			uiHelper.onDestroy();
 		}
 
-		@Override
-		public void onSaveInstanceState(Bundle outState) {
 
-		    super.onSaveInstanceState(outState);
-		    outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
-		    uiHelper.onSaveInstanceState(outState);
-		}
 		
 		private void publishStory() {
 		    com.facebook.Session session = com.facebook.Session.getActiveSession();
@@ -424,6 +478,7 @@ public class MainActivity extends FragmentActivity implements
 		        task.execute();
 		    }
 
+
 		}
 		
 		private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
@@ -436,58 +491,462 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		@Override
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
 			// TODO Auto-generated method stub
+			
 		}
 
 		@Override
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
 			// TODO Auto-generated method stub
+			
 		}
 
 		@Override
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
 			// TODO Auto-generated method stub
-
-
+			
 		}
+		
+}
+	
+
+
+
+		public static class VotingListFragment extends ListFragment implements
+				ActionBar.TabListener {
+			int mNum;
+			String pagename;
+
+			long songid;
+			String[] votinglist = new String[100];
+
+			/**
+			 * Create a new instance of CountingFragment, providing "num" as an
+			 * argument.
+			 */
+			static VotingListFragment newInstance(int num) {
+				VotingListFragment f = new VotingListFragment();
+
+				// Supply num input as an argument.
+				Bundle args = new Bundle();
+				args.putInt("num", num);
+				f.setArguments(args);
+
+				return f;
+			}
+
+			/**
+			 * When creating, retrieve this instance's number from its arguments.
+			 */
+			@Override
+			public void onCreate(Bundle savedInstanceState) {
+				super.onCreate(savedInstanceState);
+				mNum = getArguments() != null ? getArguments().getInt("num") : 1;
+
+			}
+
+			/**
+			 * The Fragment's UI is just a simple text view showing its instance
+			 * number.
+			 */
+			@Override
+			public View onCreateView(LayoutInflater inflater, ViewGroup container,
+					Bundle savedInstanceState) {
+				View v = inflater.inflate(R.layout.voting_pager_list, container,
+						false);
+				View tv = v.findViewById(R.id.text);
+				((TextView) tv).setText("Voting Page");
+				return v;
+			}
+			public void sendVote1(View v){
+				//MyApplication app = (MyApplication) getApplication();
+				votecount[0]++;
+			}
+			public void sendVote2(View v){
+				//MyApplication app = (MyApplication) getApplication();
+				 votecount[1]++;
+
+			}
+			public void sendVote3(View v){
+				//MyApplication app = (MyApplication) getApplication();
+				votecount[2]++;
+
+			}
+			public void sendVote4(View v){
+				//MyApplication app = (MyApplication) getApplication();
+				 votecount[3]++;
+
+			}
+			@Override
+			public void onActivityCreated(Bundle savedInstanceState) {
+				//String[] votinglist = new String[100];
+
+				//MainActivity a = (MainActivity) getActivity();
+				//SongListFragment fm = (SongListFragment) a.getAdapter().getItem(2);
+				// votinglist = fm.songs;
+
+				
+				for (int i = 0; i < 4; i++) { 
+					votinglist[i] = "votinglist " +Integer.toString(i); 
+					}
+					
+				
+				super.onActivityCreated(savedInstanceState);
+				setListAdapter(new ArrayAdapter<String>(getActivity(),
+						android.R.layout.simple_list_item_single_choice, votinglist));
+			}
+
+			@Override
+			public void onListItemClick(ListView l, View v, int position, long id) {
+				Log.i("VotingPageFragmentList", "Item clicked: " + id);
+
+				id = songid;
+				ListView listView = getListView();
+				listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+				listView.setSelection(0);
+				listView.setSelected(true);
+				// MainActivity a = (MainActivity) getActivity();
+				// MyApplication app = (MyApplication) a.getApplication();
+				// app.sendMessage((int) id);
+			}
+
+			public void submitVote(View view) {
+				// VotingListFragment votefragvar = new VotingListFragment();
+				// long id = votefragvar.songid;
+				// MainActivity a = (MainActivity) getActivity();
+				// MyApplication app = (MyApplication) a.getApplication();
+				// app.sendMessage((int) id);
+				// Context context = a.getApplicationContext();
+				// CharSequence text = "+id";
+				// int duration = Toast.LENGTH_SHORT;
+
+				// Toast toast = Toast.makeText(context, text, duration);
+				// toast.show();
+
+			}
+
+			@Override
+			public void onTabSelected(Tab tab, FragmentTransaction ft) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onTabReselected(Tab tab, FragmentTransaction ft) {
+				// TODO Auto-generated method stub
+
+			}
+		}
+
+	
+	
+
+	private static final int PROGRESS = 0x1;
+
+	private ProgressBar mProgress;
+	private int mProgressStatus = 0;
+
+	private Handler mHandler = new Handler();
+
+	protected synchronized void startprogressbar() {// Bundle icicle) {
+		// super.onCreate(icicle);
+		mProgressStatus = 0;
+		// setContentView(R.layout.progressbar_activity);
+
+		mProgress = (ProgressBar) findViewById(R.id.adprogress_progressBar);
+		
+		Executor exe = Executors.newSingleThreadExecutor();
+		
+		// Start lengthy operation in a background thread
+		exe.execute(new Runnable() {
+			public void run() {
+				while (mProgressStatus < 100) {
+					if(mProgressStatus >=95){
+						resetandSend();
+						mProgressStatus = 0;
+					}
+					if (mProgressStatus == 90) {
+						try {
+							Uri notification = RingtoneManager
+									.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+							Ringtone r = RingtoneManager.getRingtone(
+									getApplicationContext(), notification);
+							r.play();
+						} catch (Exception e) {
+						}
+					}
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					mProgressStatus = mProgressStatus + 1;
+
+					// Update the progress bar
+					mHandler.post(new Runnable() {
+						public void run() {
+							mProgress.setProgress(mProgressStatus);
+						}
+					});
+				}
+			}
+		});
+	}
+public synchronized void resetandSend(){
+	int send=0;
+	int i;
+	for(i= 0; i<4; i++){
+		if(votecount[i]>send)
+			send = i;
+	}
+	send = id[send];
+	for( i= 0; i<4; i++)
+		votecount[i]=0;
+	
+	totalvotings++;
+	if(totalvotings>=(songquantity/4)){
+		for( i=0; i<songquantity; i++)
+			votecheck[i]= false;
+	}
+	MyApplication app = (MyApplication) getApplication();
+	app.sendMessage(send);
+		
+	int random0, random1, random2, random3;
+	Random rand = new Random();
+		random0 =rand.nextInt(songquantity-1);
+		random1 =rand.nextInt(songquantity-1);
+		random2 =rand.nextInt(songquantity-1);
+		random3 =rand.nextInt(songquantity-1);
+		Log.i("here","ere");
+		String h = "" + songquantity;
+		Log.i("songquantity", h);
+		votecheck[random0]= true;
+		while(votecheck[random1] == true){
+			random1 = rand.nextInt(songquantity-1);
+			Log.i("loop","loop");
+		}
+		votecheck[random1]= true;
+		while(votecheck[random2]== true){
+			random2 =rand.nextInt(songquantity-1);
+		}
+		votecheck[random2]= true;
+		while(votecheck[random3]== true){
+			random3 =rand.nextInt(songquantity-1);
+		}
+		votecheck[random3]= true;
+		votesongs = new String[4];
+		votesongs[0] = songs[random0];
+		Log.i("Vote:", votesongs[0]);
+		votesongs[1] = songs[random1];
+		Log.i("Vote:", votesongs[1]);
+		votesongs[2] = songs[random2];
+		Log.i("Vote:", votesongs[2]);
+		votesongs[3] = songs[random3];
+		Log.i("Vote:", votesongs[3]);
+
+		this.runOnUiThread(new Runnable(){
+			@Override
+			public void run(){
+				Button but1 = (Button) findViewById(R.id.Song1);
+				Button but2= (Button) findViewById(R.id.Song2);
+				Button but3 = (Button) findViewById(R.id.Song3);
+				Button but4 = (Button) findViewById(R.id.Song4);
+				but1.setText(votesongs[0]);
+				but2.setText(votesongs[1]);
+				but3.setText(votesongs[2]);
+				but4.setText(votesongs[3]);
+			}
+		});
+		
+		id[0]=random0;
+		id[1]=random1;
+		id[2]=random2;
+		id[3]=random3;
+		//startprogressbar();
 }
 
-	/*
-	 * public void loadSongs(View view){ int i; String[] songstemp = new
-	 * String[100]; final byte shake[] = {0xF}; byte buf[] = new byte[20]; int
-	 * bufcount=0; boolean done = false; //public boolean transmitting = false;
-	 * int songnumber = 0; // MainActivity a = (MainActivity) getActivity();
-	 * MyApplication app = (MyApplication) getApplication(); if (app.sock !=
-	 * null && app.sock.isConnected() && !app.sock.isClosed() ) { //transmitting
-	 * = true; InputStream in; try { in = app.sock.getInputStream();
-	 * 
-	 * 
-	 * // See if any bytes are available from the Middleman
-	 * 
-	 * 
-	 * in.read(buf); while(buf[bufcount]!= 0x0){ // If so, read them in and
-	 * create a sring //bufcount = 0; while(buf[bufcount]!=0x1){ in.read(buf);
-	 * bufcount++; } songstemp[songnumber] = new String(buf, 0, bufcount-1,
-	 * "US-ASCII"); Log.i("song", songstemp[songnumber]); songnumber++; buf =
-	 * new byte[20]; in.read(buf); bufcount = 0; }
-	 * 
-	 * 
-	 * songs = new String[songnumber]; for( i = 0; i<songnumber; i++){ songs[i]
-	 * = songstemp[i]; } } catch (IOException e) { // TODO Auto-generated catch
-	 * block e.printStackTrace(); }
-	 * 
-	 * }
-	 * 
-	 * SongListFragment fragment = (SongListFragment) mAdapter.getItem(2);
-	 * fragment.setListAdapter(new ArrayAdapter<String>(this,
-	 * android.R.layout.simple_list_item_1, songs)); }
-	 */
+public void partyMode(View view){
+	MyApplication app = (MyApplication) getApplication();
+	app.sendMessage(229);
+	Button but = (Button) findViewById(R.id.party);
+	if(mode == false ){
+	but.setText("Remote Mode");
+	mode = true;
+	}
+	else{
+		but.setText("Party Mode");
+		mode = false;
+	}
+//	VotingListFragment fm1 = (VotingListFragment) mAdapter.getItem(1);
+//	fm1.setListAdapter(new ArrayAdapter<String>(this,
+	//		android.R.layout.simple_list_item_1, voting_list));
+}
+	public void loadSongs(View view) {
+		Log.i("running:", "running");
+
+		int i;
+		String[] songstemp = new String[100];
+		final byte shake[] = { 0xF };
+		byte buf[];
+		byte bufstore[]; 
+				bufstore = new byte[500];
+		int bufcount = 0;
+		int current = 0;
+		boolean done = false;
+		// public boolean transmitting = false;
+		int songnumber = 0;
+		
+		// MainActivity a = (MainActivity) getActivity();
+		MyApplication app = (MyApplication) getApplication();
+		// app.sendMessage(101);
+		app.sendMessage(230);
+		if (app.sock != null && app.sock.isConnected() && !app.sock.isClosed()) {
+			// transmitting = true;
+			Log.i("socket", "socket");
+			InputStream in;
+			try {
+				in = app.sock.getInputStream();
+				buf = new byte[200];
+				//app.sendMessage(231);
+
+			in.read(buf);
+			for (i = 0; buf[i]!=0x0 && done == false; i++) {
+				
+				bufstore[bufcount] = buf[i];
+				bufcount++;
+				if(buf[i]== 0xf)
+					done = true;
+			}
+				
+				while(!done){
+					buf = new byte[130];
+					app.sendMessage(231);
+
+				in.read(buf);
+				for (i = 0; buf[i]!=0 && done == false; i++) {
+					
+					bufstore[bufcount] = buf[i];
+					bufcount++;
+					if(buf[i]== 0xf)
+						done = true;
+				}
+			}
+				// See if any bytes are available from the Middleman
+
+				Log.i("pastsocket", "pastsocet");
+				//in.read(buf);
+				Log.i("bufstore", bufstore.toString());
+				bufcount = 0;
+				int stringcount = 0;
+				for (stringcount = 0; bufstore[stringcount] != 0xf; stringcount++) {
+					// If so, read them in and create a sring
+					 //bufcount = stringcount;
+					if (bufstore[stringcount] == 0x1) {
+						songstemp[songnumber] = new String(bufstore, bufcount,
+								stringcount - bufcount, "US-ASCII");
+						Log.i("song", songstemp[songnumber]);
+						songnumber++;
+						bufcount = stringcount + 1;
+					}/* else if (buf[buf.length - 1] == 0x2) {
+
+						app.sendMessage(0x0);
+
+						in.read(buf);
+					}*/
+					// buf = new byte[20];
+					// in.read(buf);
+					// bufcount = 0;
+				}
+
+				songs = new String[songnumber];
+				for (i = 0; i < songnumber; i++) {
+					songs[i] = songstemp[i];
+					Log.i("songs:", songs[i]);
+				}
+				songquantity = i;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	/*	SongListFragment fm = (SongListFragment) mAdapter.getItem(2);
+		fm.setListAdapter(new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, songs));*/
+		// Fragment fm = new SongListFragment();
+		// fm.onCreateView();
+		
+		
+		
+		votecheck = new boolean[songquantity];
+		for(i= 0; i<songquantity; i++){
+			votecheck[i] = false;
+		}
+		int random0, random1, random2, random3;
+		Random rand = new Random();
+			random0 =rand.nextInt(songquantity-1);
+			random1 =rand.nextInt(songquantity-1);
+			random2 =rand.nextInt(songquantity-1);
+			random3 =rand.nextInt(songquantity-1);
+			Log.i("here","ere");
+			String h = "" + songquantity;
+			Log.i("songquantity", h);
+			votecheck[random0]= true;
+			while(votecheck[random1] == true){
+				random1 = rand.nextInt(songquantity-1);
+				Log.i("loop","loop");
+			}
+			votecheck[random1]= true;
+			while(votecheck[random2]== true){
+				random2 =rand.nextInt(songquantity-1);
+			}
+			votecheck[random2]= true;
+			while(votecheck[random3]== true){
+				random3 =rand.nextInt(songquantity-1);
+			}
+			votecheck[random3]= true;
+			votesongs = new String[4];
+			votesongs[0] = songs[random0];
+			Log.i("Vote:", votesongs[0]);
+			votesongs[1] = songs[random1];
+			Log.i("Vote:", votesongs[1]);
+			votesongs[2] = songs[random2];
+			Log.i("Vote:", votesongs[2]);
+			votesongs[3] = songs[random3];
+			Log.i("Vote:", votesongs[3]);
+			Button but1 = (Button) findViewById(R.id.Song1);
+			Button but2= (Button) findViewById(R.id.Song2);
+			Button but3 = (Button) findViewById(R.id.Song3);
+			Button but4 = (Button) findViewById(R.id.Song4);
+			but1.setText(votesongs[0]);
+			but2.setText(votesongs[1]);
+			but3.setText(votesongs[2]);
+			but4.setText(votesongs[3]);
+			id[0]=random0;
+			id[1]=random1;
+			id[2]=random2;
+			id[3]=random3;
+			
+			startprogressbar();
+		//	VotingListFragment fm1 = (VotingListFragment) mAdapter.getItem(1);
+			//fm1.setListAdapter(new ArrayAdapter<String>(this,
+				//	android.R.layout.simple_list_item_single_choice, voting_list));
+		//MyAdapter fm1 =  mAdapter;
+		//fm1.notifyDataSetChanged();
+	}
+
 	// Route called when the user presses "connect"
 
 	public void openSocket(View view) {
 
 		new SocketConnect().execute((Void) null);
+
 
 	}
 

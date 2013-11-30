@@ -11,7 +11,7 @@ import android.widget.TextView;
 public class PlayingSong extends Activity {
  public String[] songlist = new String[100];
  public int currentsong;
- 
+ public int songcount;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,6 +23,7 @@ public class PlayingSong extends Activity {
 		text.setText(song);
 		songlist = intent.getExtras().getStringArray("songslist");
 		currentsong = intent.getExtras().getInt("cursong");
+		songcount = intent.getExtras().getInt("count");
 	}
 
 	protected void onResume(Bundle savedInstanceState) {
@@ -35,6 +36,8 @@ public class PlayingSong extends Activity {
 		text.setText(song);
 		songlist = intent.getExtras().getStringArray("songslist");
 		currentsong = intent.getExtras().getInt("cursong");
+		songcount = intent.getExtras().getInt("count");
+
 	}
 	
 	@Override
@@ -75,9 +78,11 @@ public void forwardClick(View v){
 	MyApplication app = (MyApplication) getApplication();
 	
 	app.sendMessage(253);
-	
+	if( currentsong == songcount)
+		currentsong = 0;
+	else
 	currentsong = currentsong + 1;
-	//Log.i("fuck", songlist[currentsong]);
+	//Log.i("", songlist[currentsong]);
 	TextView text = (TextView) findViewById(R.id.textView1);
 
 	text.setText((String) songlist[currentsong]);
@@ -90,6 +95,9 @@ public void backClick(View v){
 	MyApplication app = (MyApplication) getApplication();
 	
 	app.sendMessage(252);
+	if( currentsong == 0 )
+		currentsong = songcount-1;
+	else
 	currentsong = currentsong - 1;
 	TextView text = (TextView) findViewById(R.id.textView1);
 	text.setText(songlist[currentsong]);

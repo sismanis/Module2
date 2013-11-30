@@ -8,7 +8,8 @@
         android:layout_width="match_parent" 
         android:layout_height="wrap_content"
         android:gravity="center_vertical|center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
 
     <!-- The frame layout is here since we will be showing either
     the empty view or the list view.  -->
@@ -16,7 +17,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="0.5" >
+        android:layout_weight="0" >
 
         <!-- Here is the list. Since we are using a ListActivity, we
              have to call it "@android:id/list" so ListActivity will
@@ -27,11 +28,13 @@
             android:drawSelectorOnTop="false"/>
 
         <!-- Here is the view to show if the list is emtpy -->
-        <TextView android:id="@android:id/empty"
+
+        <TextView
+            android:id="@android:id/empty"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/no_items"/>
+            android:layout_height="315dp"
+            android:text="@string/no_items"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </FrameLayout>
     
@@ -41,15 +44,40 @@
             android:layout_weight="0.5"
             android:gravity="top|center"
             android:measureWithLargestChild="true"
-            android:orientation="horizontal" >
+            android:orientation="vertical"
+             >
        
+       <Button
+           android:id="@+id/Song1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="sendVote1"
+        android:text="Song1" />
+        
+        <Button
+            android:id="@+id/Song2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="sendVote2"
+        android:text="Song2" />
+        
+         <Button
+             android:id="@+id/Song3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="sendVote3"
+        android:text="Song3" />
+         
+          <Button
+              
+         android:id="@+id/Song4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="sendVote4"
+        android:text="Song4" />
+    
 
-        <Button android:id="@+id/submit_vote"
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content"
-            android:text="@string/submit_vote"
-            android:onClick="submitVote">
-        </Button>
+    
 
     </LinearLayout>
 
