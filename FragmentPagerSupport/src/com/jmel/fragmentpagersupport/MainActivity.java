@@ -394,9 +394,7 @@ public class MainActivity extends FragmentActivity implements  SongListFragment.
 
 		        com.facebook.Request.Callback callback= new com.facebook.Request.Callback() {
 		            public void onCompleted(Response response) {
-		                JSONObject graphResponse = response
-		                                           .getGraphObject()
-		                                           .getInnerJSONObject();
+		                JSONObject graphResponse = response.getGraphObject().getInnerJSONObject();
 		                String postId = null;
 		                try {
 		                    postId = graphResponse.getString("id");
