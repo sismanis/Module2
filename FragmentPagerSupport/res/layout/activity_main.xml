@@ -89,5 +89,13 @@
         android:layout_height="wrap_content"
         android:onClick="loadSongs"
         android:text="Load Songs" />
+         
+          <Button
+              
+         android:id="@+id/party"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="partyMode"
+        android:text="Party Mode" />
     
  </LinearLayout>
