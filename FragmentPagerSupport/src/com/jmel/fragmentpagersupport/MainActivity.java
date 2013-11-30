@@ -39,16 +39,15 @@ import android.widget.Toast;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
-import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
-import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
 //import java.io.OutputStream;
 
 //import java.io.OutputStream;
 
-public class MainActivity extends FragmentActivity implements  SongListFragment.OnSongSelectedListener{
+public class MainActivity extends FragmentActivity implements
+		SongListFragment.OnSongSelectedListener {
 
 	static final int NUM_ITEMS = 3;
 
@@ -56,6 +55,9 @@ public class MainActivity extends FragmentActivity implements  SongListFragment.
 	static String[] songs;
 
 	ViewPager mPager;
+
+	// FB
+	private HomePageFragment homePageFragment;
 
 	// private ProgressBar mProgress;
 	// private int mProgressStatus = 0;
@@ -104,6 +106,16 @@ public class MainActivity extends FragmentActivity implements  SongListFragment.
 
 		// Set up a timer task. We will use the timer to check the
 		// input queue every 500 ms
+
+		/*
+		 * //FB if (savedInstanceState == null) { // Add the fragment on initial
+		 * activity setup homePageFragment = new HomePageFragment();
+		 * getSupportFragmentManager() .beginTransaction()
+		 * .add(android.R.id.content, homePageFragment) .commit(); } else { //
+		 * Or set the fragment from restored state info homePageFragment =
+		 * (HomePageFragment) getSupportFragmentManager()
+		 * .findFragmentById(android.R.id.content); }
+		 */
 	}
 
 	public void OnSongSelected(String string[]) {
@@ -222,8 +234,8 @@ public class MainActivity extends FragmentActivity implements  SongListFragment.
 		String pagename;
 
 		// FB
+		private static final String TAG = "MainFragment";
 		private UiLifecycleHelper uiHelper;
-		private static final String TAG = "HomePageFragment";
 		private Button shareButton;
 		private static final List<String> PERMISSIONS = Arrays
 				.asList("publish_actions");
@@ -252,6 +264,8 @@ public class MainActivity extends FragmentActivity implements  SongListFragment.
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			mNum = getArguments() != null ? getArguments().getInt("num") : 1;
+
+			// FB
 			uiHelper = new UiLifecycleHelper(getActivity(), callback);
 			uiHelper.onCreate(savedInstanceState);
 
@@ -273,8 +287,8 @@ public class MainActivity extends FragmentActivity implements  SongListFragment.
 			LoginButton authButton = (LoginButton) v
 					.findViewById(R.id.authButton);
 			authButton.setFragment(this);
-			authButton.setReadPermissions(Arrays.asList("user_likes",
-					"user_status"));
+			// authButton.setReadPermissions(Arrays.asList("user_likes",
+			// "user_status"));
 			shareButton = (Button) v.findViewById(R.id.shareButton);
 			shareButton.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -290,38 +304,19 @@ public class MainActivity extends FragmentActivity implements  SongListFragment.
 			return v;
 		}
 
-		@Override
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
-
-		}
-
-		// FB Session
+		// FB
 		private void onSessionStateChange(com.facebook.Session session,
 				com.facebook.SessionState state, Exception exception) {
 			if (state.isOpened()) {
 				Log.i(TAG, "Logged in...");
-			} else if (state.isClosed()) {
-				Log.i(TAG, "Logged out...");
-			}
-			if (state.isOpened()) {
 				shareButton.setVisibility(View.VISIBLE);
 				if (pendingPublishReauthorization
-						&& state.equals(SessionState.OPENED_TOKEN_UPDATED)) {
+						&& state.equals(com.facebook.SessionState.OPENED_TOKEN_UPDATED)) {
 					pendingPublishReauthorization = false;
 					publishStory();
 				}
 			} else if (state.isClosed()) {
+				Log.i(TAG, "Logged out...");
 				shareButton.setVisibility(View.INVISIBLE);
 			}
 		}
@@ -337,6 +332,9 @@ public class MainActivity extends FragmentActivity implements  SongListFragment.
 		@Override
 		public void onResume() {
 			super.onResume();
+			// For scenarios where the main activity is launched and user
+			// session is not null, the session state change notification
+			// may not be triggered. Trigger it if it's open/closed.
 			com.facebook.Session session = com.facebook.Session
 					.getActiveSession();
 			if (session != null && (session.isOpened() || session.isClosed())) {
@@ -389,23 +387,13 @@ public class MainActivity extends FragmentActivity implements  SongListFragment.
 				}
 
 				Bundle postParams = new Bundle();
-
-				MainActivity a = (MainActivity) getActivity();
-				SongListFragment fragment = (SongListFragment) a.getAdapter()
-						.getItem(2);
-
-				long id = fragment.songid;
-				Log.i("songs", Integer.toString((int) id));
-				Log.i("songs", Integer.toString((int) fragment.songid));
-				postParams.putString("name", "I'm Listening to song " + id
-						+ "!");
-				postParams
-						.putString("caption",
-								"Listen to a song and vote on the next one with your friends!");
+				postParams.putString("name", "Facebook SDK for Android");
+				postParams.putString("caption",
+						"Build great social apps and get more installs.");
 				postParams
 						.putString(
 								"description",
-								"Project created by Jesse Melamed, Alex Sismanis, Justin Siu and Andrew Whitman.");
+								"The Facebook SDK for Android makes it easier and faster to develop Facebook integrated Android apps.");
 				postParams.putString("link",
 						"https://developers.facebook.com/android");
 				postParams
@@ -440,7 +428,8 @@ public class MainActivity extends FragmentActivity implements  SongListFragment.
 						session, "me/feed", postParams, HttpMethod.POST,
 						callback);
 
-				RequestAsyncTask task = new RequestAsyncTask(request);
+				com.facebook.RequestAsyncTask task = new com.facebook.RequestAsyncTask(
+						request);
 				task.execute();
 			}
 
@@ -455,9 +444,24 @@ public class MainActivity extends FragmentActivity implements  SongListFragment.
 			}
 			return true;
 		}
-	}
 
-	
+		@Override
+		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
 
 	/*
 	 * public void loadSongs(View view){ int i; String[] songstemp = new
