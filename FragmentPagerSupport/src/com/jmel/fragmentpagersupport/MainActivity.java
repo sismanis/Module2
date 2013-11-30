@@ -54,7 +54,7 @@ import com.facebook.widget.LoginButton;
 
 //import java.io.OutputStream;
 
-public class MainActivity extends FragmentActivity {// implements ProgressBar{
+public class MainActivity extends FragmentActivity implements SongListFragment.OnHeadlineSelectedListener{// implements ProgressBar{
 	static final int NUM_ITEMS = 3;
 
 	MyAdapter mAdapter;
@@ -108,6 +108,39 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		TCPReadTimerTask tcp_task = new TCPReadTimerTask();
 		Timer tcp_timer = new Timer();
 		tcp_timer.schedule(tcp_task, 3000, 500);
+		
+		public void onArticleSelected(int position) {
+	        // The user selected the headline of an article from the HeadlinesFragment
+	        // Do something here to display that article
+
+	        ArticleFragment articleFrag = (ArticleFragment)
+	                getSupportFragmentManager().findFragmentById(R.id.article_fragment);
+
+	        if (articleFrag != null) {
+	            // If article frag is available, we're in two-pane layout...
+
+	            // Call a method in the ArticleFragment to update its content
+	            articleFrag.updateArticleView(position);
+	        } else {
+	            // Otherwise, we're in the one-pane layout and must swap frags...
+
+	            // Create fragment and give it an argument for the selected article
+	            ArticleFragment newFragment = new ArticleFragment();
+	            Bundle args = new Bundle();
+	            args.putInt(ArticleFragment.ARG_POSITION, position);
+	            newFragment.setArguments(args);
+	        
+	            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+	            // Replace whatever is in the fragment_container view with this fragment,
+	            // and add the transaction to the back stack so the user can navigate back
+	            transaction.replace(R.id.fragment_container, newFragment);
+	            transaction.addToBackStack(null);
+
+	            // Commit the transaction
+	            transaction.commit();
+	        }
+	    }
 
 
 		// Set up a timer task. We will use the timer to check the
@@ -561,12 +594,32 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		int mNum;
 		String pagename;
 		long songid;
-
-
 		public EditText et;// = (EditText)
 
-		// getListView().findViewById(R.id.songeditText);
 
+
+		OnHeadlineSelectedListener mCallback;
+
+	    // Container Activity must implement this interface
+	    public interface OnHeadlineSelectedListener {
+	        public void onArticleSelected(int position);
+	    }
+
+	    @Override
+	    public void onAttach(Activity activity) {
+	        super.onAttach(activity);
+	        
+	        // This makes sure that the container activity has implemented
+	        // the callback interface. If not, it throws an exception
+	        try {
+	            mCallback = (OnHeadlineSelectedListener) activity;
+	        } catch (ClassCastException e) {
+	            throw new ClassCastException(activity.toString()
+	                    + " must implement OnHeadlineSelectedListener");
+	        }
+	    }
+	    
+	    
 		/**
 		 * Create a new instance of CountingFragment, providing "num" as an
 		 * argument.
@@ -662,6 +715,8 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			Log.i("songs", Integer.toString((int)songid));
 			MainActivity a = (MainActivity) getActivity();
 			MyApplication app = (MyApplication) a.getApplication();
+			
+			mCallback.OnHeadlineSelectedListener(position);
 
 
 			// app.sendMessage((int) id);
