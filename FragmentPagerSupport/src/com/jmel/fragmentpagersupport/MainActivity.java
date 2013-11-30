@@ -52,6 +52,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 	static String[] songs;
 	static int AndroidId = 0;
 	ViewPager mPager;
+	static int songquantity= 0;
 
 	// private ProgressBar mProgress;
 	// private int mProgressStatus = 0;
@@ -612,6 +613,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			i.putExtra("songname", songs[(int) id]);
 			i.putExtra("songslist", songs);
 			i.putExtra("cursong", (int) id);
+			i.putExtra("count", songquantity);
 			startActivity(i);
 
 		}
@@ -695,9 +697,11 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		boolean done = false;
 		// public boolean transmitting = false;
 		int songnumber = 0;
+		
 		// MainActivity a = (MainActivity) getActivity();
 		MyApplication app = (MyApplication) getApplication();
 		// app.sendMessage(101);
+		app.sendMessage(230);
 		if (app.sock != null && app.sock.isConnected() && !app.sock.isClosed()) {
 			// transmitting = true;
 			Log.i("socket", "socket");
@@ -746,6 +750,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 					songs[i] = songstemp[i];
 					Log.i("songs:", songs[i]);
 				}
+				songquantity = i;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
