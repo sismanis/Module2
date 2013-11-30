@@ -110,48 +110,6 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		tcp_timer.schedule(tcp_task, 3000, 500);
 
 
-		/*
-		 * TextProgressBar textProgressBar = (TextProgressBar)
-		 * findViewById(R.id.progress_bar);
-		 * textProgressBar.setText("Loading 70%");
-		 * textProgressBar.setProgress(70); textProgressBar.setTextSize(18);
-		 */
-
-		// progress_bar = new ProgressBar(this);
-		// mProgress = (ProgressBar) findViewById(R.id.progress_bar);
-
-		/*
-		 * // Start lengthy operation in a background thread int time = 0;
-		 * while(time != 6){ time++; new Thread(new Runnable() { public void
-		 * run() { while (mProgressStatus < 100) { int i = 0; try {
-		 * Thread.sleep(10000); } catch (InterruptedException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); } i += 10;
-		 * mProgressStatus = i;
-		 * 
-		 * // Update the progress bar mHandler.post(new Runnable() { public void
-		 * run() { mProgress.setProgress(mProgressStatus); } }); } } }).start();
-		 * } Thread.currentThread().isInterrupted();
-		 * 
-		 * publishprogress(0);
-		 */
-		// Watch for button clicks.
-
-		/*
-		 * Button button = (Button) findViewById(R.id.submit_vote);
-		 * button.setOnClickListener(new OnClickListener() {
-		 */
-
-		// });
-
-		/*
-		 * private void sendVote() { VotingListFragment votefragvar = new
-		 * VotingListFragment(); long id = votefragvar.songid; //MainActivity a
-		 * = (MainActivity) getActivity(); MyApplication app = (MyApplication)
-		 * getApplication(); app.sendMessage((int) id);
-		 * 
-		 * }
-		 */
-
 		// Set up a timer task. We will use the timer to check the
 		// input queue every 500 ms
 	}
@@ -173,33 +131,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		
 	}
 
-	/*
-	 * public class TextProgressBar extends ProgressBar {
-	 * 
-	 * private String text = ""; private int textColor = Color.BLACK; private
-	 * float textSize = 15;
-	 * 
-	 * public TextProgressBar(Context context) { super(context); }
-	 * 
-	 * @Override protected synchronized void onDraw(Canvas canvas) {
-	 * super.onDraw(canvas); // create an instance of class Paint, set color and
-	 * font size Paint textPaint = new Paint(); textPaint.setAntiAlias(true);
-	 * textPaint.setColor(textColor); textPaint.setTextSize(textSize); // In
-	 * order to show text in a middle, we need to know its size Rect bounds =
-	 * new Rect(); textPaint.getTextBounds(text, 0, text.length(), bounds); //
-	 * Now we store font size in bounds variable and can calculate it's //
-	 * position int x = getWidth() / 2 - bounds.centerX(); int y = getHeight() /
-	 * 2 - bounds.centerY(); // drawing text with appropriate color and size in
-	 * the center canvas.drawText(text, x, y, textPaint); }
-	 * 
-	 * public synchronized void setText(String text) { if (text != null) {
-	 * this.text = text; } else { this.text = ""; } postInvalidate(); }
-	 * 
-	 * public synchronized void setTextSize(float textSize) { this.textSize =
-	 * textSize; postInvalidate(); }
-	 * 
-	 * }
-	 */
+
 
 	public static class MyAdapter extends FragmentPagerAdapter implements
 			ActionBar.TabListener, ViewPager.OnPageChangeListener {
@@ -456,7 +388,6 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		        Bundle postParams = new Bundle();
 		        
 		        MainActivity a = (MainActivity) getActivity();
-		        
 		        SongListFragment fragment = (SongListFragment) a.getAdapter().getItem(2);
 		        
 		        long id = fragment.songid;
@@ -520,7 +451,7 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 			ActionBar.TabListener {
 		int mNum;
 		String pagename;
-		long songid;
+		//long songid;
 
 		/**
 		 * Create a new instance of CountingFragment, providing "num" as an
@@ -563,22 +494,26 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
-			final String[] votinglist = new String[5];
+			String[] votinglist = new String[100];
 
 
-			for (int i = 0; i < 4; i++) {
+			MainActivity a = (MainActivity) getActivity();
+			SongListFragment fm = (SongListFragment) a.getAdapter().getItem(2);
+			//votinglist = fm.songs;
+			
+			/*for (int i = 0; i < 4; i++) {
 				votinglist[i] = "votinglist " + Integer.toString(i);
-			}
+			}*/
 			super.onActivityCreated(savedInstanceState);
 			setListAdapter(new ArrayAdapter<String>(getActivity(),
-					android.R.layout.simple_list_item_single_choice, votinglist));
+					android.R.layout.simple_list_item_single_choice, fm.songs));
 		}
 
 		@Override
 		public void onListItemClick(ListView l, View v, int position, long id) {
 			Log.i("VotingPageFragmentList", "Item clicked: " + id);
 
-			this.songid = id;
+			//this.songid = id;
 			ListView listView = getListView();
 			listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 			listView.setSelection(0);
@@ -723,8 +658,8 @@ public class MainActivity extends FragmentActivity {// implements ProgressBar{
 		public void onListItemClick(ListView l, View v, int position, long id) {
 			Log.i("SongListFragmentList", "Item clicked: " + id);
 			boolean forcheck = false;
-			this.songid = id;
-			Log.i("songs", Integer.toString((int)this.songid));
+			songid = id;
+			Log.i("songs", Integer.toString((int)songid));
 			MainActivity a = (MainActivity) getActivity();
 			MyApplication app = (MyApplication) a.getApplication();
 
