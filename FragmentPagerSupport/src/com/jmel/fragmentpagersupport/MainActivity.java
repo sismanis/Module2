@@ -53,6 +53,7 @@ public class MainActivity extends FragmentActivity implements
 
 	MyAdapter mAdapter;
 	static String[] songs;
+	static String song;
 
 	ViewPager mPager;
 
@@ -115,14 +116,14 @@ public class MainActivity extends FragmentActivity implements
 		 */
 	}
 
-	public void OnSongSelected(String string[]) {
+	public void OnSongSelected(String s) {
 		// The user selected the headline of an article from the
 		// HeadlinesFragment
 		// Do something here to display that article
 
-		VotingListFragment votingFrag = (VotingListFragment) mAdapter
-				.getItem(1);
-		votingFrag.votinglist = string;
+		//VotingListFragment votingFrag = (VotingListFragment) mAdapter
+				//.getItem(1);
+		MainActivity.song = s;
 
 	}
 
@@ -382,9 +383,11 @@ public class MainActivity extends FragmentActivity implements
 		            return;
 		        }
 
+		        
+		        //String s = song;
 		        Bundle postParams = new Bundle();
 		        postParams.putString("name", "Party Shuffle");
-		        postParams.putString("caption", "I'm listening to song join in on the party and vote for the next song!");
+		        postParams.putString("caption", "I'm listening to  " + song + "\n" + "join in on the party and vote for the next song!");
 		        postParams.putString("description", "Project by Jesse Melamed, Alex Sismanis, Andy Whitman, Justin Sui");
 		        postParams.putString("link", "https://developers.facebook.com/android");
 		        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");

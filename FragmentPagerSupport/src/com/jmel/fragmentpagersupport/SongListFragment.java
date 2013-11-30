@@ -33,7 +33,7 @@ public class SongListFragment extends ListFragment implements
 
 	// Container Activity must implement this interface
 	public interface OnSongSelectedListener {
-		public void OnSongSelected(String string[]);
+		public void OnSongSelected(String s);
 	}
 
 	@Override
@@ -129,9 +129,9 @@ public class SongListFragment extends ListFragment implements
 		for (int i = 0; i < 100; i++) {
 			songs[i] = "song " + Integer.toString(i);
 		}
-		mCallback.OnSongSelected(songs);
+		
 
-		Random gen = new Random();
+		/*Random gen = new Random();
 		int vote1;
 		int i = 0;
 		while (i < 4) {
@@ -140,7 +140,7 @@ public class SongListFragment extends ListFragment implements
 				voting[i] = songs[vote1];
 				i++;
 			}
-		}
+		}*/
 
 		super.onActivityCreated(savedInstanceState);
 		setListAdapter(new ArrayAdapter<String>(getActivity(),
@@ -156,7 +156,7 @@ public class SongListFragment extends ListFragment implements
 		MainActivity a = (MainActivity) getActivity();
 		MyApplication app = (MyApplication) a.getApplication();
 
-		// mCallback.OnSongSelected(id);
+		
 
 		// app.sendMessage((int) id);
 		if (!songs_sort.isEmpty()) {
@@ -167,6 +167,9 @@ public class SongListFragment extends ListFragment implements
 				}
 			}
 		}
+		String s;
+		s = songs[(int)id];
+		mCallback.OnSongSelected(s);
 
 		// app.sendMessage((int) id);
 		Intent i = new Intent(app, PlayingSong.class);

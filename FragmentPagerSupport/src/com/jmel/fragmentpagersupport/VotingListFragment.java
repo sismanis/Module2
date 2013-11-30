@@ -70,9 +70,9 @@ import android.widget.TextView;
 			// votinglist = fm.songs;
 
 			
-			/*for (int i = 0; i < 4; i++) { 
+			for (int i = 0; i < 4; i++) { 
 				votinglist[i] = "votinglist " +Integer.toString(i); 
-				}*/
+				}
 				
 			
 			super.onActivityCreated(savedInstanceState);
