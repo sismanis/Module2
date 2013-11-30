@@ -383,9 +383,9 @@ public class MainActivity extends FragmentActivity implements
 		        }
 
 		        Bundle postParams = new Bundle();
-		        postParams.putString("name", "Facebook SDK for Android");
-		        postParams.putString("caption", "Build great social apps and get more installs.");
-		        postParams.putString("description", "The Facebook SDK for Android makes it easier and faster to develop Facebook integrated Android apps.");
+		        postParams.putString("name", "Party Shuffle");
+		        postParams.putString("caption", "I'm listening to song join in on the party and vote for the next song!");
+		        postParams.putString("description", "Project by Jesse Melamed, Alex Sismanis, Andy Whitman, Justin Sui");
 		        postParams.putString("link", "https://developers.facebook.com/android");
 		        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
 
