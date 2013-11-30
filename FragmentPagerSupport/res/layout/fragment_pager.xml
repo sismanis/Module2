@@ -1,9 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical" 
         android:padding="4dip"
         android:gravity="center_horizontal"
         android:layout_width="match_parent" 
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+         tools:context=".Party Shuffle"
+        >
 
     <android.support.v4.view.ViewPager
             android:id="@+id/pager"

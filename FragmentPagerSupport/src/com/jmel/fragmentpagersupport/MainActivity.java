@@ -13,7 +13,27 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -74,8 +94,8 @@ import com.facebook.widget.LoginButton;
 
 //import java.io.OutputStream;
 
-public class MainActivity extends FragmentActivity implements
-		SongListFragment.OnSongSelectedListener {
+public class MainActivity extends FragmentActivity{// implements{
+		//SongListFragment.OnSongSelectedListener {
 
 	static final int NUM_ITEMS = 3;
 
@@ -92,6 +112,7 @@ public class MainActivity extends FragmentActivity implements
 	int[] id= new int[4];
 	static int[] votecount = new int[4];
 	int totalvotings= 0;
+	static String s;
 	//public List<String> voting_list = new ArrayList<String>();
 
 	// FB
@@ -154,7 +175,7 @@ public class MainActivity extends FragmentActivity implements
 		 */
 	}
 
-	public void OnSongSelected(String s) {
+	/*public void OnSongSelected(String s) {
 		// The user selected the headline of an article from the
 		// HeadlinesFragment
 		// Do something here to display that article
@@ -164,7 +185,7 @@ public class MainActivity extends FragmentActivity implements
 		MainActivity.song = s;
 
 
-	}
+	}*/
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -441,7 +462,7 @@ public class MainActivity extends FragmentActivity implements
 		        //String s = song;
 		        Bundle postParams = new Bundle();
 		        postParams.putString("name", "Party Shuffle");
-		        postParams.putString("caption", "I'm listening to  " + song + "\n" + "join in on the party and vote for the next song!");
+		        postParams.putString("caption", "I'm listening to  " + s + "\n" + "join in on the party and vote for the next song!");
 		        postParams.putString("description", "Project by Jesse Melamed, Alex Sismanis, Andy Whitman, Justin Sui");
 		        postParams.putString("link", "https://developers.facebook.com/android");
 		        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
@@ -510,7 +531,25 @@ public class MainActivity extends FragmentActivity implements
 		
 }
 	
+	public void sendVote1(View v){
+		//MyApplication app = (MyApplication) getApplication();
+		votecount[0]++;
+	}
+	
+	public void sendVote2(View v){
+		//MyApplication app = (MyApplication) getApplication();
+		 votecount[1]++;
 
+	}
+	public void sendVote3(View v){
+		//MyApplication app = (MyApplication) getApplication();
+		votecount[2]++;
+
+	}
+	public void sendVote4(View v){
+		//MyApplication app = (MyApplication) getApplication();
+		 votecount[3]++;
+	}
 
 
 		public static class VotingListFragment extends ListFragment implements
@@ -519,7 +558,7 @@ public class MainActivity extends FragmentActivity implements
 			String pagename;
 
 			long songid;
-			String[] votinglist = new String[100];
+			//String[] votinglist = new String[100];
 
 			/**
 			 * Create a new instance of CountingFragment, providing "num" as an
@@ -559,25 +598,9 @@ public class MainActivity extends FragmentActivity implements
 				((TextView) tv).setText("Voting Page");
 				return v;
 			}
-			public void sendVote1(View v){
-				//MyApplication app = (MyApplication) getApplication();
-				votecount[0]++;
-			}
-			public void sendVote2(View v){
-				//MyApplication app = (MyApplication) getApplication();
-				 votecount[1]++;
-
-			}
-			public void sendVote3(View v){
-				//MyApplication app = (MyApplication) getApplication();
-				votecount[2]++;
-
-			}
-			public void sendVote4(View v){
-				//MyApplication app = (MyApplication) getApplication();
-				 votecount[3]++;
-
-			}
+		
+			
+			
 			@Override
 			public void onActivityCreated(Bundle savedInstanceState) {
 				//String[] votinglist = new String[100];
@@ -585,16 +608,16 @@ public class MainActivity extends FragmentActivity implements
 				//MainActivity a = (MainActivity) getActivity();
 				//SongListFragment fm = (SongListFragment) a.getAdapter().getItem(2);
 				// votinglist = fm.songs;
-
 				
-				for (int i = 0; i < 4; i++) { 
-					votinglist[i] = "votinglist " +Integer.toString(i); 
-					}
+				
+				//for (int i = 0; i < 4; i++) { 
+			//		votinglist[i] = "votinglist " +Integer.toString(i); 
+				//	}
 					
 				
 				super.onActivityCreated(savedInstanceState);
-				setListAdapter(new ArrayAdapter<String>(getActivity(),
-						android.R.layout.simple_list_item_single_choice, votinglist));
+			//	setListAdapter(new ArrayAdapter<String>(getActivity(),
+				//		android.R.layout.simple_list_item_single_choice, votinglist));
 			}
 
 			@Override
@@ -611,21 +634,7 @@ public class MainActivity extends FragmentActivity implements
 				// app.sendMessage((int) id);
 			}
 
-			public void submitVote(View view) {
-				// VotingListFragment votefragvar = new VotingListFragment();
-				// long id = votefragvar.songid;
-				// MainActivity a = (MainActivity) getActivity();
-				// MyApplication app = (MyApplication) a.getApplication();
-				// app.sendMessage((int) id);
-				// Context context = a.getApplicationContext();
-				// CharSequence text = "+id";
-				// int duration = Toast.LENGTH_SHORT;
-
-				// Toast toast = Toast.makeText(context, text, duration);
-				// toast.show();
-
-			}
-
+			
 			@Override
 			public void onTabSelected(Tab tab, FragmentTransaction ft) {
 				// TODO Auto-generated method stub
@@ -876,9 +885,9 @@ public void partyMode(View view){
 			}
 
 		}
-	/*	SongListFragment fm = (SongListFragment) mAdapter.getItem(2);
+		SongListFragment fm = (SongListFragment) mAdapter.getItem(2);
 		fm.setListAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, songs));*/
+				android.R.layout.simple_list_item_1, songs));
 		// Fragment fm = new SongListFragment();
 		// fm.onCreateView();
 		
@@ -1038,6 +1047,186 @@ public void partyMode(View view){
 
 			}
 		}
+	}
+
+	
+
+	public static class SongListFragment extends ListFragment implements
+			ActionBar.TabListener {
+		int mNum;
+		String pagename;
+		long songid;
+		public EditText et;
+
+		/*OnSongSelectedListener mCallback;
+
+		// Container Activity must implement this interface
+		public interface OnSongSelectedListener {
+			public void OnSongSelected(String s);
+		}
+
+		@Override
+		public void onAttach(Activity activity) {
+			super.onAttach(activity);
+
+			// This makes sure that the container activity has implemented
+			// the callback interface. If not, it throws an exception
+			try {
+				mCallback = (OnSongSelectedListener) activity;
+			} catch (ClassCastException e) {
+				throw new ClassCastException(activity.toString()
+						+ " must implement OnSongSelectedListener");
+			}
+		}*/
+
+		/**
+		 * Create a new instance of CountingFragment, providing "num" as an
+		 * argument.
+		 */
+		static SongListFragment newInstance(int num) {
+			SongListFragment f = new SongListFragment();
+
+			// Supply num input as an argument.
+			Bundle args = new Bundle();
+			args.putInt("num", num);
+			f.setArguments(args);
+
+			return f;
+		}
+
+		/**
+		 * When creating, retrieve this instance's number from its arguments.
+		 */
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			mNum = getArguments() != null ? getArguments().getInt("num") : 1;
+
+		}
+
+		/**
+		 * The Fragment's UI is just a simple text view showing its instance number.
+		 */
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View v = inflater.inflate(R.layout.fragment_pager_list, container,
+					false);
+			View tv = v.findViewById(R.id.text);
+			((TextView) tv).setText("Song List");
+
+			et = (EditText) v.findViewById(R.id.songeditText);
+
+			et.addTextChangedListener(new TextWatcher() {
+				public void afterTextChanged(Editable s) {
+					// Abstract Method of TextWatcher Interface.
+				}
+
+				public void beforeTextChanged(CharSequence s, int start, int count,
+						int after) {
+					// Abstract Method of TextWatcher Interface.
+				}
+
+				public void onTextChanged(CharSequence s, int start, int before,
+						int count) {
+					int textlength = et.getText().length();
+					// List<String> songs_sort = new ArrayList<String>();
+					songs_sort.clear();
+					for (int i = 0; i < songs.length; i++) {
+						if (textlength <= songs[i].length()) {
+							if (songs[i].toLowerCase().contains(
+									et.getText().toString().toLowerCase())) {
+								songs_sort.add(songs[i]);
+							}
+						}
+					}
+
+					setListAdapter(new ArrayAdapter<String>(getActivity(),
+							android.R.layout.simple_list_item_1, songs_sort));
+				}
+			});
+
+			return v;
+		}
+
+		public List<String> songs_sort = new ArrayList<String>();
+		//public final String[] songs = new String[100];
+		//public final String[] voting = new String[100];
+
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			//for (int i = 0; i < 100; i++) {
+				//songs[i] = "song " + Integer.toString(i);
+			//}
+			
+
+			/*Random gen = new Random();
+			int vote1;
+			int i = 0;
+			while (i < 4) {
+				vote1 = gen.nextInt();
+				if (vote1 < 100) {
+					voting[i] = songs[vote1];
+					i++;
+				}
+			}*/
+
+			super.onActivityCreated(savedInstanceState);
+			setListAdapter(new ArrayAdapter<String>(getActivity(),
+					android.R.layout.simple_list_item_1, songs));
+		}
+
+		@Override
+		public void onListItemClick(ListView l, View v, int position, long id) {
+			Log.i("SongListFragmentList", "Item clicked: " + id);
+			boolean forcheck = false;
+			songid = id;
+			Log.i("songs", Integer.toString((int) songid));
+			MainActivity a = (MainActivity) getActivity();
+			MyApplication app = (MyApplication) a.getApplication();
+
+			
+
+			 app.sendMessage((int) id);
+				s = songs[(int)id];
+			if (!songs_sort.isEmpty()) {
+				for (int j = 0; j < songs.length && forcheck == false; j++) {
+					if (songs[j].equals(songs_sort.get((int) id))) {
+						id = j;
+						forcheck = true;
+					}
+				}
+			}
+			
+
+			//mCallback.OnSongSelected(s);
+
+			// app.sendMessage((int) id);
+			Intent i = new Intent(app, PlayingSong.class);
+			i.putExtra("songname", songs[(int) id]);
+			i.putExtra("songslist", songs);
+			i.putExtra("cursong", (int) id);
+			startActivity(i);
+
+		}
+
+		@Override
+		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 
 }

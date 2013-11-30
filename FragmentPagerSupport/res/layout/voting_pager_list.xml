@@ -2,7 +2,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:drawable/gallery_thumb">
+    android:background="@android:drawable/gallery_thumb"
+   >
 
     <TextView android:id="@+id/text"
         android:layout_width="match_parent" 
@@ -52,21 +53,21 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="sendVote1"
-        android:text="Song1" />
+        android:text="" />
         
         <Button
             android:id="@+id/Song2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="sendVote2"
-        android:text="Song2" />
+        android:text="" />
         
          <Button
              android:id="@+id/Song3"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="sendVote3"
-        android:text="Song3" />
+        android:text="" />
          
           <Button
               
@@ -74,7 +75,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="sendVote4"
-        android:text="Song4" />
+        android:text="" />
     
 
     

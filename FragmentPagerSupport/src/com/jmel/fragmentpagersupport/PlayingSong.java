@@ -15,7 +15,7 @@ public class PlayingSong extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	    getActionBar().setDisplayHomeAsUpEnabled(true);
+	    getActionBar().setDisplayHomeAsUpEnabled(false);
 		setContentView(R.layout.activity_playing_song);
 		Intent intent = getIntent();
 		String song = intent.getExtras().getString("songname");
@@ -28,7 +28,7 @@ public class PlayingSong extends Activity {
 
 	protected void onResume(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	    getActionBar().setDisplayHomeAsUpEnabled(true);
+	    getActionBar().setDisplayHomeAsUpEnabled(false);
 		setContentView(R.layout.activity_playing_song);
 		Intent intent = getIntent();
 		String song = intent.getExtras().getString("songname");
