@@ -348,8 +348,8 @@ public class MainActivity extends FragmentActivity{// implements{
 			LoginButton authButton = (LoginButton) v
 					.findViewById(R.id.authButton);
 			authButton.setFragment(this);
-			// authButton.setReadPermissions(Arrays.asList("user_likes",
-			// "user_status"));
+			 authButton.setReadPermissions(Arrays.asList("user_likes",
+			 "user_status"));
 			shareButton = (Button) v.findViewById(R.id.shareButton);
 			shareButton.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -782,14 +782,14 @@ public synchronized void resetandSend(){
 
 public void partyMode(View view){
 	MyApplication app = (MyApplication) getApplication();
-	app.sendMessage(229);
+	//app.sendMessage(229);
 	Button but = (Button) findViewById(R.id.party);
 	if(mode == false ){
-	but.setText("Remote Mode");
+	but.setText("Switch to Party Mode");
 	mode = true;
 	}
 	else{
-		but.setText("Party Mode");
+		but.setText("Switch to Master Remote Mode");
 		mode = false;
 	}
 //	VotingListFragment fm1 = (VotingListFragment) mAdapter.getItem(1);
@@ -1180,6 +1180,7 @@ public void partyMode(View view){
 		public void onListItemClick(ListView l, View v, int position, long id) {
 			Log.i("SongListFragmentList", "Item clicked: " + id);
 			boolean forcheck = false;
+			if(mode == false){
 			songid = id;
 			Log.i("songs", Integer.toString((int) songid));
 			MainActivity a = (MainActivity) getActivity();
@@ -1206,7 +1207,7 @@ public void partyMode(View view){
 			i.putExtra("songname", songs[(int) id]);
 			i.putExtra("songslist", songs);
 			i.putExtra("cursong", (int) id);
-			startActivity(i);
+			startActivity(i);}
 
 		}
 

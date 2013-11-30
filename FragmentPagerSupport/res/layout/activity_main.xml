@@ -47,9 +47,10 @@
             android:layout_weight="1"
             android:inputType="number"
             android:text="100" />
-    </LinearLayout>
 
-    <LinearLayout
+    </LinearLayout>
+    
+        <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
@@ -68,29 +69,35 @@
             android:layout_weight="4"
             android:inputType="number"
             android:text="50002" />
-    </LinearLayout>
 
-    <Button
+    </LinearLayout>
+    
+        <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="openSocket"
         android:text="Connect" />
-
-    <Button
+        
+        <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="closeSocket"
         android:text="Disconnect" />
-
-
-    <com.facebook.widget.LoginButton
+        
+         <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="loadSongs"
+        android:text="Load Songs" />
+         
+        <com.facebook.widget.LoginButton
         android:id="@+id/authButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp" />
 
-    <Button
+        <Button
         android:id="@+id/shareButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -99,15 +106,6 @@
         android:text="@string/share"
         android:textStyle="bold"
         android:visibility="invisible" />
-
-
-
-        
-         <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="loadSongs"
-        android:text="Load Songs" />
          
           <Button
               
@@ -115,7 +113,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="partyMode"
-        android:text="Party Mode" />
+        android:text="Switch to Party Mode" />
     
  </LinearLayout>
-
