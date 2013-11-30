@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -54,7 +55,8 @@ import com.facebook.widget.LoginButton;
 
 //import java.io.OutputStream;
 
-public class MainActivity extends FragmentActivity implements SongListFragment.OnHeadlineSelectedListener{// implements ProgressBar{
+public class MainActivity extends FragmentActivity implements  SongListFragment.OnSongSelectedListener{
+
 	static final int NUM_ITEMS = 3;
 
 	MyAdapter mAdapter;
@@ -70,7 +72,7 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 	MyAdapter getAdapter() {
 		return mAdapter;
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,7 +82,6 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 
 		mPager = (ViewPager) findViewById(R.id.pager);
 		mPager.setAdapter(mAdapter);
-
 
 		final ActionBar bar = getActionBar();
 		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -104,47 +105,23 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 				.detectDiskReads().detectDiskWrites().detectNetwork()
 				.penaltyLog().build());
 
-
 		TCPReadTimerTask tcp_task = new TCPReadTimerTask();
 		Timer tcp_timer = new Timer();
 		tcp_timer.schedule(tcp_task, 3000, 500);
-		
-		public void onArticleSelected(int position) {
-	        // The user selected the headline of an article from the HeadlinesFragment
-	        // Do something here to display that article
-
-	        ArticleFragment articleFrag = (ArticleFragment)
-	                getSupportFragmentManager().findFragmentById(R.id.article_fragment);
-
-	        if (articleFrag != null) {
-	            // If article frag is available, we're in two-pane layout...
-
-	            // Call a method in the ArticleFragment to update its content
-	            articleFrag.updateArticleView(position);
-	        } else {
-	            // Otherwise, we're in the one-pane layout and must swap frags...
-
-	            // Create fragment and give it an argument for the selected article
-	            ArticleFragment newFragment = new ArticleFragment();
-	            Bundle args = new Bundle();
-	            args.putInt(ArticleFragment.ARG_POSITION, position);
-	            newFragment.setArguments(args);
-	        
-	            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-	            // Replace whatever is in the fragment_container view with this fragment,
-	            // and add the transaction to the back stack so the user can navigate back
-	            transaction.replace(R.id.fragment_container, newFragment);
-	            transaction.addToBackStack(null);
-
-	            // Commit the transaction
-	            transaction.commit();
-	        }
-	    }
-
 
 		// Set up a timer task. We will use the timer to check the
 		// input queue every 500 ms
+	}
+
+	public void OnSongSelected(String string[]) {
+		// The user selected the headline of an article from the
+		// HeadlinesFragment
+		// Do something here to display that article
+
+		VotingListFragment votingFrag = (VotingListFragment) mAdapter
+				.getItem(1);
+		votingFrag.votinglist = string;
+
 	}
 
 	@Override
@@ -160,11 +137,8 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
-		
-		
+
 	}
-
-
 
 	public static class MyAdapter extends FragmentPagerAdapter implements
 			ActionBar.TabListener, ViewPager.OnPageChangeListener {
@@ -236,7 +210,7 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 					mViewPager.setCurrentItem(i);
 				}
 			}
-			
+
 		}
 
 		@Override
@@ -249,17 +223,17 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 
 	}
 
-
 	public static class HomePageFragment extends Fragment implements // ///////////////////////////////////////////////////////////////////////////////////////////
 			ActionBar.TabListener {
 		int mNum;
 		String pagename;
-		
-		//FB
+
+		// FB
 		private UiLifecycleHelper uiHelper;
 		private static final String TAG = "HomePageFragment";
 		private Button shareButton;
-		private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+		private static final List<String> PERMISSIONS = Arrays
+				.asList("publish_actions");
 		private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
 		private boolean pendingPublishReauthorization = false;
 
@@ -310,14 +284,14 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 					"user_status"));
 			shareButton = (Button) v.findViewById(R.id.shareButton);
 			shareButton.setOnClickListener(new View.OnClickListener() {
-			    @Override
-			    public void onClick(View v) {
-			        publishStory();        
-			    }
+				@Override
+				public void onClick(View v) {
+					publishStory();
+				}
 			});
 			if (savedInstanceState != null) {
-			    pendingPublishReauthorization = 
-			        savedInstanceState.getBoolean(PENDING_PUBLISH_KEY, false);
+				pendingPublishReauthorization = savedInstanceState.getBoolean(
+						PENDING_PUBLISH_KEY, false);
 			}
 
 			return v;
@@ -340,29 +314,29 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 		}
 
 		// FB Session
-		private void onSessionStateChange(com.facebook.Session session, com.facebook.SessionState state,
-				Exception exception) {
+		private void onSessionStateChange(com.facebook.Session session,
+				com.facebook.SessionState state, Exception exception) {
 			if (state.isOpened()) {
 				Log.i(TAG, "Logged in...");
 			} else if (state.isClosed()) {
 				Log.i(TAG, "Logged out...");
 			}
 			if (state.isOpened()) {
-		        shareButton.setVisibility(View.VISIBLE);
-		        if (pendingPublishReauthorization && 
-		                state.equals(SessionState.OPENED_TOKEN_UPDATED)) {
-		            pendingPublishReauthorization = false;
-		            publishStory();
-		        }
-		    } else if (state.isClosed()) {
-		        shareButton.setVisibility(View.INVISIBLE);
-		    }
+				shareButton.setVisibility(View.VISIBLE);
+				if (pendingPublishReauthorization
+						&& state.equals(SessionState.OPENED_TOKEN_UPDATED)) {
+					pendingPublishReauthorization = false;
+					publishStory();
+				}
+			} else if (state.isClosed()) {
+				shareButton.setVisibility(View.INVISIBLE);
+			}
 		}
 
 		private com.facebook.Session.StatusCallback callback = new com.facebook.Session.StatusCallback() {
 			@Override
-			public void call(com.facebook.Session session, com.facebook.SessionState state,
-					Exception exception) {
+			public void call(com.facebook.Session session,
+					com.facebook.SessionState state, Exception exception) {
 				onSessionStateChange(session, state, exception);
 			}
 		};
@@ -370,7 +344,8 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 		@Override
 		public void onResume() {
 			super.onResume();
-			com.facebook.Session session = com.facebook.Session.getActiveSession();
+			com.facebook.Session session = com.facebook.Session
+					.getActiveSession();
 			if (session != null && (session.isOpened() || session.isClosed())) {
 				onSessionStateChange(session, session.getState(), null);
 			}
@@ -399,84 +374,93 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 		@Override
 		public void onSaveInstanceState(Bundle outState) {
 			super.onSaveInstanceState(outState);
-			outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
+			outState.putBoolean(PENDING_PUBLISH_KEY,
+					pendingPublishReauthorization);
 			uiHelper.onSaveInstanceState(outState);
 		}
-		
+
 		private void publishStory() {
-			com.facebook.Session session = com.facebook.Session.getActiveSession();
+			com.facebook.Session session = com.facebook.Session
+					.getActiveSession();
 
-		    if (session != null){
+			if (session != null) {
 
-		        // Check for publish permissions    
-		        List<String> permissions = session.getPermissions();
-		        if (!isSubsetOf(PERMISSIONS, permissions)) {
-		            pendingPublishReauthorization = true;
-		            com.facebook.Session.NewPermissionsRequest newPermissionsRequest = new com.facebook.Session
-		                    .NewPermissionsRequest(this, PERMISSIONS);
-		        session.requestNewPublishPermissions(newPermissionsRequest);
-		            return;
-		        }
+				// Check for publish permissions
+				List<String> permissions = session.getPermissions();
+				if (!isSubsetOf(PERMISSIONS, permissions)) {
+					pendingPublishReauthorization = true;
+					com.facebook.Session.NewPermissionsRequest newPermissionsRequest = new com.facebook.Session.NewPermissionsRequest(
+							this, PERMISSIONS);
+					session.requestNewPublishPermissions(newPermissionsRequest);
+					return;
+				}
 
-		        Bundle postParams = new Bundle();
-		        
-		        MainActivity a = (MainActivity) getActivity();
-		        SongListFragment fragment = (SongListFragment) a.getAdapter().getItem(2);
-		        
-		        long id = fragment.songid;
-		        Log.i("songs", Integer.toString((int)id));
-		        Log.i("songs", Integer.toString((int)fragment.songid));
-		        postParams.putString("name", "I'm Listening to song " + id + "!");
-		        postParams.putString("caption", "Listen to a song and vote on the next one with your friends!");
-		        postParams.putString("description", "Project created by Jesse Melamed, Alex Sismanis, Justin Siu and Andrew Whitman.");
-		        postParams.putString("link", "https://developers.facebook.com/android");
-		        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
+				Bundle postParams = new Bundle();
 
-		        com.facebook.Request.Callback callback= new com.facebook.Request.Callback() {
-		            public void onCompleted(Response response) {
-		                JSONObject graphResponse = response
-		                                           .getGraphObject()
-		                                           .getInnerJSONObject();
-		                String postId = null;
-		                try {
-		                    postId = graphResponse.getString("id");
-		                } catch (JSONException e) {
-		                    Log.i(TAG,
-		                        "JSON error "+ e.getMessage());
-		                }
-		                FacebookRequestError error = response.getError();
-		                if (error != null) {
-		                    Toast.makeText(getActivity()
-		                         .getApplicationContext(),
-		                         error.getErrorMessage(),
-		                         Toast.LENGTH_SHORT).show();
-		                    } else {
-		                        Toast.makeText(getActivity()
-		                             .getApplicationContext(), 
-		                             postId,
-		                             Toast.LENGTH_LONG).show();
-		                }
-		            }
-		        };
+				MainActivity a = (MainActivity) getActivity();
+				SongListFragment fragment = (SongListFragment) a.getAdapter()
+						.getItem(2);
 
-		        com.facebook.Request request = new com.facebook.Request(session, "me/feed", postParams, 
-		                              HttpMethod.POST, callback);
+				long id = fragment.songid;
+				Log.i("songs", Integer.toString((int) id));
+				Log.i("songs", Integer.toString((int) fragment.songid));
+				postParams.putString("name", "I'm Listening to song " + id
+						+ "!");
+				postParams
+						.putString("caption",
+								"Listen to a song and vote on the next one with your friends!");
+				postParams
+						.putString(
+								"description",
+								"Project created by Jesse Melamed, Alex Sismanis, Justin Siu and Andrew Whitman.");
+				postParams.putString("link",
+						"https://developers.facebook.com/android");
+				postParams
+						.putString("picture",
+								"https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
 
-		        RequestAsyncTask task = new RequestAsyncTask(request);
-		        task.execute();
-		    }
+				com.facebook.Request.Callback callback = new com.facebook.Request.Callback() {
+					public void onCompleted(Response response) {
+						JSONObject graphResponse = response.getGraphObject()
+								.getInnerJSONObject();
+						String postId = null;
+						try {
+							postId = graphResponse.getString("id");
+						} catch (JSONException e) {
+							Log.i(TAG, "JSON error " + e.getMessage());
+						}
+						FacebookRequestError error = response.getError();
+						if (error != null) {
+							Toast.makeText(
+									getActivity().getApplicationContext(),
+									error.getErrorMessage(), Toast.LENGTH_SHORT)
+									.show();
+						} else {
+							Toast.makeText(
+									getActivity().getApplicationContext(),
+									postId, Toast.LENGTH_LONG).show();
+						}
+					}
+				};
+
+				com.facebook.Request request = new com.facebook.Request(
+						session, "me/feed", postParams, HttpMethod.POST,
+						callback);
+
+				RequestAsyncTask task = new RequestAsyncTask(request);
+				task.execute();
+			}
 
 		}
-		
-		
-		
-		private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
-		    for (String string : subset) {
-		        if (!superset.contains(string)) {
-		            return false;
-		        }
-		    }
-		    return true;
+
+		private boolean isSubsetOf(Collection<String> subset,
+				Collection<String> superset) {
+			for (String string : subset) {
+				if (!superset.contains(string)) {
+					return false;
+				}
+			}
+			return true;
 		}
 	}
 
@@ -484,7 +468,9 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 			ActionBar.TabListener {
 		int mNum;
 		String pagename;
-		//long songid;
+
+		long songid;
+		String[] votinglist = new String[100];
 
 		/**
 		 * Create a new instance of CountingFragment, providing "num" as an
@@ -527,26 +513,28 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
-			String[] votinglist = new String[100];
+			//String[] votinglist = new String[100];
 
+			//MainActivity a = (MainActivity) getActivity();
+			//SongListFragment fm = (SongListFragment) a.getAdapter().getItem(2);
+			// votinglist = fm.songs;
 
-			MainActivity a = (MainActivity) getActivity();
-			SongListFragment fm = (SongListFragment) a.getAdapter().getItem(2);
-			//votinglist = fm.songs;
 			
-			/*for (int i = 0; i < 4; i++) {
-				votinglist[i] = "votinglist " + Integer.toString(i);
-			}*/
+			/*for (int i = 0; i < 4; i++) { 
+				votinglist[i] = "votinglist " +Integer.toString(i); 
+				}*/
+				
+			
 			super.onActivityCreated(savedInstanceState);
 			setListAdapter(new ArrayAdapter<String>(getActivity(),
-					android.R.layout.simple_list_item_single_choice, fm.songs));
+					android.R.layout.simple_list_item_single_choice, votinglist));
 		}
 
 		@Override
 		public void onListItemClick(ListView l, View v, int position, long id) {
 			Log.i("VotingPageFragmentList", "Item clicked: " + id);
 
-			//this.songid = id;
+			id = songid;
 			ListView listView = getListView();
 			listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 			listView.setSelection(0);
@@ -589,237 +577,44 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 		}
 	}
 
-	public static class SongListFragment extends ListFragment implements
-			ActionBar.TabListener {// , TextWatcher {
-		int mNum;
-		String pagename;
-		long songid;
-		public EditText et;// = (EditText)
+	
 
-
-
-		OnHeadlineSelectedListener mCallback;
-
-	    // Container Activity must implement this interface
-	    public interface OnHeadlineSelectedListener {
-	        public void onArticleSelected(int position);
-	    }
-
-	    @Override
-	    public void onAttach(Activity activity) {
-	        super.onAttach(activity);
-	        
-	        // This makes sure that the container activity has implemented
-	        // the callback interface. If not, it throws an exception
-	        try {
-	            mCallback = (OnHeadlineSelectedListener) activity;
-	        } catch (ClassCastException e) {
-	            throw new ClassCastException(activity.toString()
-	                    + " must implement OnHeadlineSelectedListener");
-	        }
-	    }
-	    
-	    
-		/**
-		 * Create a new instance of CountingFragment, providing "num" as an
-		 * argument.
-		 */
-		static SongListFragment newInstance(int num) {
-			SongListFragment f = new SongListFragment();
-
-			// Supply num input as an argument.
-			Bundle args = new Bundle();
-			args.putInt("num", num);
-			f.setArguments(args);
-
-			return f;
-		}
-
-		/**
-		 * When creating, retrieve this instance's number from its arguments.
-		 */
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			mNum = getArguments() != null ? getArguments().getInt("num") : 1;
-
-		}
-
-		/**
-		 * The Fragment's UI is just a simple text view showing its instance
-		 * number.
-		 */
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View v = inflater.inflate(R.layout.fragment_pager_list, container,
-					false);
-			View tv = v.findViewById(R.id.text);
-			((TextView) tv).setText("Song List");
-
-			et = (EditText) v.findViewById(R.id.songeditText);
-
-			et.addTextChangedListener(new TextWatcher() {
-				public void afterTextChanged(Editable s) {
-					// Abstract Method of TextWatcher Interface.
-				}
-
-				public void beforeTextChanged(CharSequence s, int start,
-						int count, int after) {
-					// Abstract Method of TextWatcher Interface.
-				}
-
-				public void onTextChanged(CharSequence s, int start,
-						int before, int count) {
-					int textlength = et.getText().length();
-					// List<String> songs_sort = new ArrayList<String>();
-					songs_sort.clear();
-					for (int i = 0; i < songs.length; i++) {
-						if (textlength <= songs[i].length()) {
-							if (songs[i].toLowerCase().contains(
-									et.getText().toString().toLowerCase())) {
-								songs_sort.add(songs[i]);
-							}
-						}
-					}
-
-					setListAdapter(new ArrayAdapter<String>(getActivity(),
-							android.R.layout.simple_list_item_1, songs_sort));
-				}
-			});
-
-			return v;
-		}
-
-
-		public List<String> songs_sort = new ArrayList<String>();
-		public final String[] songs = new String[100];
-
-
-		@Override
-		public void onActivityCreated(Bundle savedInstanceState) {
-			for (int i = 0; i < 100; i++) {
-				songs[i] = "song " + Integer.toString(i);
-			}
-			
-			super.onActivityCreated(savedInstanceState);
-			setListAdapter(new ArrayAdapter<String>(getActivity(),
-					android.R.layout.simple_list_item_1, songs));
-		}
-
-		@Override
-		public void onListItemClick(ListView l, View v, int position, long id) {
-			Log.i("SongListFragmentList", "Item clicked: " + id);
-			boolean forcheck = false;
-			songid = id;
-			Log.i("songs", Integer.toString((int)songid));
-			MainActivity a = (MainActivity) getActivity();
-			MyApplication app = (MyApplication) a.getApplication();
-			
-			mCallback.OnHeadlineSelectedListener(position);
-
-
-			// app.sendMessage((int) id);
-			if (!songs_sort.isEmpty()) {
-				for (int j = 0; j < songs.length && forcheck == false; j++) { 
-					if (songs[j].equals(songs_sort.get((int)id))){
-						id = j;
-						forcheck = true;
-					}
-				}
-			}
-
-			//app.sendMessage((int) id);
-			Intent i = new Intent(app, PlayingSong.class);
-			i.putExtra("songname", songs[(int)id]);
-			i.putExtra("songslist", songs);
-			i.putExtra("cursong", (int) id);
-			startActivity(i);
-		
-
-		}
-
-		@Override
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
-
-	/*public void loadSongs(View view){
-		int i;
-		String[] songstemp = new String[100];
-		 final byte shake[] = {0xF};
-		 byte buf[] = new byte[20];
-		 int bufcount=0;
-		 boolean done = false;
-		//public boolean transmitting = false;
-		int songnumber = 0;
-	//	MainActivity a = (MainActivity) getActivity();
-		MyApplication app = (MyApplication) getApplication();
-		if (app.sock != null && app.sock.isConnected() && !app.sock.isClosed() ) {
-			//transmitting = true;
-			InputStream in;
-			try {
-				in = app.sock.getInputStream();
-			
-			
-					// See if any bytes are available from the Middleman
-					
-					
-						in.read(buf);
-						while(buf[bufcount]!= 0x0){
-						// If so, read them in and create a sring
-						//bufcount = 0;
-						while(buf[bufcount]!=0x1){
-						in.read(buf);
-						bufcount++;
-						}
-						songstemp[songnumber]  = new String(buf, 0, bufcount-1, "US-ASCII");
-						Log.i("song", songstemp[songnumber]);
-						songnumber++;
-						buf = new byte[20];
-						in.read(buf);
-						bufcount = 0;
-					}
-
-					
-						songs = new String[songnumber];
-					for( i = 0; i<songnumber; i++){
-						songs[i] = songstemp[i];
-					}
-					} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-		}
-		
-		SongListFragment fragment = (SongListFragment) mAdapter.getItem(2);
-				fragment.setListAdapter(new ArrayAdapter<String>(this,
-					android.R.layout.simple_list_item_1, songs));
-	}*/
+	/*
+	 * public void loadSongs(View view){ int i; String[] songstemp = new
+	 * String[100]; final byte shake[] = {0xF}; byte buf[] = new byte[20]; int
+	 * bufcount=0; boolean done = false; //public boolean transmitting = false;
+	 * int songnumber = 0; // MainActivity a = (MainActivity) getActivity();
+	 * MyApplication app = (MyApplication) getApplication(); if (app.sock !=
+	 * null && app.sock.isConnected() && !app.sock.isClosed() ) { //transmitting
+	 * = true; InputStream in; try { in = app.sock.getInputStream();
+	 * 
+	 * 
+	 * // See if any bytes are available from the Middleman
+	 * 
+	 * 
+	 * in.read(buf); while(buf[bufcount]!= 0x0){ // If so, read them in and
+	 * create a sring //bufcount = 0; while(buf[bufcount]!=0x1){ in.read(buf);
+	 * bufcount++; } songstemp[songnumber] = new String(buf, 0, bufcount-1,
+	 * "US-ASCII"); Log.i("song", songstemp[songnumber]); songnumber++; buf =
+	 * new byte[20]; in.read(buf); bufcount = 0; }
+	 * 
+	 * 
+	 * songs = new String[songnumber]; for( i = 0; i<songnumber; i++){ songs[i]
+	 * = songstemp[i]; } } catch (IOException e) { // TODO Auto-generated catch
+	 * block e.printStackTrace(); }
+	 * 
+	 * }
+	 * 
+	 * SongListFragment fragment = (SongListFragment) mAdapter.getItem(2);
+	 * fragment.setListAdapter(new ArrayAdapter<String>(this,
+	 * android.R.layout.simple_list_item_1, songs)); }
+	 */
 	// Route called when the user presses "connect"
-
 
 	public void openSocket(View view) {
 
-
 		new SocketConnect().execute((Void) null);
-		
-		
+
 	}
 
 	// Called when the user closes a socket
@@ -907,7 +702,6 @@ public class MainActivity extends FragmentActivity implements SongListFragment.O
 			MyApplication app = (MyApplication) getApplication();
 			if (app.sock != null && app.sock.isConnected()
 					&& !app.sock.isClosed()) {
-
 
 			}
 		}
